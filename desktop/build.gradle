@@ -36,6 +36,7 @@ task dist(type: Jar) {
 
 dist.dependsOn classes
 
+/*
 eclipse {
     project {
         name = appName + "-desktop"
@@ -53,3 +54,4 @@ task afterEclipseImport(description: "Post processing after project generation",
     printer.print(classpath)
   }
 }
+*/

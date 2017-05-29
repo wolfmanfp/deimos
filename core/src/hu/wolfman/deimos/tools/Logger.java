@@ -9,8 +9,8 @@ import java.util.Date;
  * @author Farkas Péter
  */
 public final class Logger {
+    public final String filename;
     private static Logger INSTANCE;
-    private final String filename;
     private final Date date;
     private SimpleDateFormat dateFormat;
 
@@ -25,7 +25,7 @@ public final class Logger {
      * Amennyiben a példány nem létezik, ebben a metódusban jön létre.
      * @return A naplózó osztály példánya.
      */
-    public static Logger getInstance() {
+    public static Logger get() {
         if (INSTANCE == null) {
             INSTANCE = new Logger();
         }
@@ -46,6 +46,6 @@ public final class Logger {
         } catch (Exception e) {
             //TODO
         }
-        
     }
+    
 }
