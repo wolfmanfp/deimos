@@ -30,7 +30,8 @@ public class LoggerTest {
         Logger.get().log("Teszt");
         
         try (BufferedReader reader = new BufferedReader(new FileReader("deimos.log"))) {
-            String logfile = reader.toString();
+            String logfile = reader.readLine();
+            assertFalse(logfile == null);
             assertTrue(logfile.contains("Teszt"));
         } catch (Exception e) {
         }
