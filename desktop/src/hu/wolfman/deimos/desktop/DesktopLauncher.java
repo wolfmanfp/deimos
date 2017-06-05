@@ -15,6 +15,10 @@ public class DesktopLauncher {
         config.height = Constants.HEIGHT;
         config.addIcon("mik_icon.png", Files.FileType.Internal);
         
-        new LwjglApplication(new Game(), config);
+        Game game = new Game();
+        if (args[0].equals("-debug")) {
+            game.debugMode = true;
+        }
+        new LwjglApplication(game, config);
     }
 }

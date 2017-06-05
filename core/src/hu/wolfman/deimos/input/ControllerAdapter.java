@@ -10,7 +10,7 @@ import hu.wolfman.deimos.tools.Logger;
 
 /**
  *
- * @author Wolfman
+ * @author Farkas Péter
  */
 public class ControllerAdapter 
         extends com.badlogic.gdx.controllers.ControllerAdapter {

@@ -36,7 +36,7 @@ public final class Logger {
         try (FileWriter writer = new FileWriter(filename, true)) {
             String timeLog = new SimpleDateFormat("yyyy. MM. dd. HH:mm:ss")
                     .format(Calendar.getInstance().getTime());
-            writer.write(String.format("%s %s\r\n", timeLog, message));
+            writer.write(String.format("[%s] %s\r\n", timeLog, message));
         } catch (Exception e) {
             Message.errorMessage("Naplózási hiba", "Hiba");
         }

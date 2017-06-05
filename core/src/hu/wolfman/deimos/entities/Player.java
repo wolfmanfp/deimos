@@ -5,10 +5,38 @@
  */
 package hu.wolfman.deimos.entities;
 
+import com.badlogic.gdx.graphics.g2d.Batch;
+
 /**
  *
- * @author Wolfman
+ * @author Farkas Péter
  */
-public class Player extends Entity{
+public class Player extends Entity {
+    public enum State {STANDING, DEAD, WALKING, JUMPING, SHOOTING, FALLING}
+    public State currentState;
+    
+    @Override
+    public void draw(Batch batch, float alphaModulation) {
+        super.draw(batch, alphaModulation);
+    }
+
+    @Override
+    public void draw(Batch batch) {
+        super.draw(batch);
+    }
+
+    
+    @Override
+    public void update(float delta) {
+        
+    }
+
+    public void jump() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    public void fire() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
     
 }

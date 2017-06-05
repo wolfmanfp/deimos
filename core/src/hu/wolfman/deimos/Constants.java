@@ -11,6 +11,6 @@ public class Constants {
     public static final int FPS = 60;
     public static final float STEP = 1/FPS;
     
-    public static final String MAINGAME = "main/";
+    public static final String MAINGAME = "main";
     public static final String TITLE = "Szakdolgozat";
 }

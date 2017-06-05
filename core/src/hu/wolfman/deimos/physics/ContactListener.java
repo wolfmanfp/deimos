@@ -11,7 +11,7 @@ import com.badlogic.gdx.physics.box2d.Manifold;
 
 /**
  *
- * @author Wolfman
+ * @author Farkas Péter
  */
 public class ContactListener 
         implements com.badlogic.gdx.physics.box2d.ContactListener {

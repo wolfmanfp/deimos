@@ -22,12 +22,22 @@ public class Message {
         }
     }
     
+    /**
+     * Hibaüzenet megjelenítése.
+     * @param text A hibaüzenet szövege.
+     * @param title Az ablak fejlécén megjelenő szöveg.
+     */
     public static void errorMessage(String text, String title) {
         JFrame frame = new JFrame();
         JOptionPane.showMessageDialog(frame, text, title, JOptionPane.ERROR_MESSAGE);
         frame.dispose();
     }
     
+    /**
+     * Tájékoztató üzenet megjelenítése.
+     * @param text A tájékoztató üzenet szövege.
+     * @param title Az ablak fejlécén megjelenő szöveg.
+     */
     public static void infoMessage(String text, String title) {
         JFrame frame = new JFrame();
         JOptionPane.showMessageDialog(frame, text, title, JOptionPane.PLAIN_MESSAGE);

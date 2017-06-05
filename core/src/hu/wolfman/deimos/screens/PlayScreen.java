@@ -3,13 +3,16 @@ package hu.wolfman.deimos.screens;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.badlogic.gdx.utils.Array;
 import hu.wolfman.deimos.Game;
+import hu.wolfman.deimos.entities.Enemy;
 import hu.wolfman.deimos.entities.Player;
 
 /**
@@ -18,7 +21,6 @@ import hu.wolfman.deimos.entities.Player;
  */
 public class PlayScreen implements Screen {
     private Game game;
-    private Resources res;
     private Music music;
     
     private OrthographicCamera gamecam;
@@ -28,7 +30,6 @@ public class PlayScreen implements Screen {
     private OrthogonalTiledMapRenderer mapRenderer;
     
     private Player player;
-    private Array<Item> items;
     private Array<Enemy> enemies;
     
     private boolean musicIsMuted = false;
@@ -75,7 +76,7 @@ public class PlayScreen implements Screen {
                     musicIsMuted = false;
                 }
             }
-            if (Gdx.input.isKeyJustPressed(Keys.D)) {
+            if (game.debugMode && Gdx.input.isKeyJustPressed(Keys.D)) {
                 debug = !debug;
             }
         }

@@ -14,22 +14,26 @@ import hu.wolfman.deimos.tools.Logger;
 public class Game extends com.badlogic.gdx.Game {
     public SpriteBatch batch;
     public AssetManager manager;
+    
+    public boolean debugMode = false;
 
     @Override
     public void create() {
         batch = new SpriteBatch();
         manager = new AssetManager();
-        
-        // <editor-fold defaultstate="collapsed" desc="Assetek betöltése">
-        
-        // </editor-fold>   
-        
+        loadAssets();
         setScreen(new PlayScreen(this));
         Logger.get().log("A játék sikeresen elindult.");
+    }
+    
+    private void loadAssets() {
+        Resources.get().setGame(Constants.MAINGAME);
+        Resources.get().finishLoading();
     }
 
     @Override
     public void render() {
+        Gdx.gl.glClearColor(0, 0, 0, 1);
         Gdx.gl20.glClear(GL20.GL_COLOR_BUFFER_BIT);
         manager.update();
     }

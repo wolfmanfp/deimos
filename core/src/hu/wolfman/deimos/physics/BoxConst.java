@@ -4,7 +4,7 @@ package hu.wolfman.deimos.physics;
  * A fizikához kapcsolódó konstansokat tároló osztály.
  * @author Farkas Péter
  */
-public class B2D {
+public class BoxConst {
     // pixel per meter
     public static final int PPM = 100;
     
