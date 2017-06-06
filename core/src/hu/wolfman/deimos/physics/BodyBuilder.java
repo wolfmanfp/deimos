@@ -24,20 +24,24 @@ public class BodyBuilder {
         this.fixtures = new ArrayList<>();
     }
 
-    public void isDynamic() {
+    public BodyBuilder isDynamic() {
         bodyDef.type = BodyType.DynamicBody;
+        return this;
     }
     
-    public void isStatic() {
+    public BodyBuilder isStatic() {
         bodyDef.type = BodyType.StaticBody;
+        return this;
     }
     
-    public void setPosition(float x, float y) {
+    public BodyBuilder setPosition(float x, float y) {
         bodyDef.position.set(x / PPM, y / PPM);
+        return this;
     }
     
-    public void addFixture(FixtureDef fixture) {
+    public BodyBuilder addFixture(FixtureDef fixture) {
         fixtures.add(fixture);
+        return this;
     }
     
     public Body build() {

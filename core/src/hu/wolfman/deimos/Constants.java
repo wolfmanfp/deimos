@@ -5,8 +5,8 @@ package hu.wolfman.deimos;
  * @author Farkas Péter
  */
 public class Constants {
-    public static final int WIDTH = 640;
-    public static final int HEIGHT = 480;
+    public static final int WIDTH = 560;
+    public static final int HEIGHT = 280;
     
     public static final int FPS = 60;
     public static final float STEP = 1/FPS;

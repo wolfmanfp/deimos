@@ -19,23 +19,29 @@ public class FixtureBuilder {
         fixtureDef = new FixtureDef();
     }
     
-    public void setCircleShape(float radius) {
+    public FixtureBuilder setCircleShape(float radius) {
         shape = new CircleShape();
-        ((CircleShape) shape).setRadius(radius);
+        ((CircleShape) shape).setRadius(radius / PPM);
+        fixtureDef.shape = shape;
+        return this;
     }
     
-    public void setPolygonShape(float x, float y, float cx, float cy) {
+    public FixtureBuilder setPolygonShape(float x, float y, float cx, float cy) {
         shape = new PolygonShape();
-        ((PolygonShape) shape).setAsBox(x, y, new Vector2(cx / PPM, cy / PPM), 0);
+        ((PolygonShape) shape).setAsBox(x / PPM, y / PPM, new Vector2(cx / PPM, cy / PPM), 0);
+        fixtureDef.shape = shape;
+        return this;
     }
     
-    public void setFilter(short category, short mask) {
+    public FixtureBuilder setFilter(short category, short mask) {
         fixtureDef.filter.categoryBits = category;
         fixtureDef.filter.maskBits = mask;
+        return this;
     }
     
-    public void setAsSensor() {
+    public FixtureBuilder setAsSensor() {
         fixtureDef.isSensor = true;
+        return this;
     }
     
     public FixtureDef build() {

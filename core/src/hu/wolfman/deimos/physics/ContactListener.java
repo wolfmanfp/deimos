@@ -7,7 +7,9 @@ package hu.wolfman.deimos.physics;
 
 import com.badlogic.gdx.physics.box2d.Contact;
 import com.badlogic.gdx.physics.box2d.ContactImpulse;
+import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.Manifold;
+import static hu.wolfman.deimos.physics.BoxConst.*;
 
 /**
  *
@@ -18,22 +20,40 @@ public class ContactListener
 
     @Override
     public void beginContact(Contact contact) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        Fixture fixA = contact.getFixtureA();
+        Fixture fixB = contact.getFixtureB();
+        
+        int collisionDefinition = fixA.getFilterData().categoryBits | fixB.getFilterData().categoryBits;
+        
+        switch(collisionDefinition) {
+            case PLAYER_BIT | GROUND_BIT:
+                break;
+            case PLAYER_BIT | ENEMY_BIT:
+                break;
+            case BULLET_BIT | ENEMY_BIT:
+                break;
+            case BULLET_BIT | PLAYER_BIT:
+                break;
+            case BULLET_BIT | GROUND_BIT:
+                break;
+            case ENEMY_BIT | GROUND_BIT:
+                break;
+        }
     }
 
     @Override
     public void endContact(Contact contact) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+
     }
 
     @Override
     public void preSolve(Contact contact, Manifold oldManifold) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+
     }
 
     @Override
     public void postSolve(Contact contact, ContactImpulse impulse) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+
     }
     
 }

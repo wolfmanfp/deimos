@@ -5,10 +5,20 @@
  */
 package hu.wolfman.deimos.entities;
 
+import com.badlogic.gdx.physics.box2d.Body;
+
 /**
  *
  * @author Wolfman
  */
-public class Enemy {
+public class Enemy extends Entity {
+
+    public Enemy(Body body) {
+        super(body);
+    }
+
+    @Override
+    public void update(float delta) {
+    }
     
 }

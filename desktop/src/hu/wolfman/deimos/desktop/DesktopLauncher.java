@@ -16,7 +16,7 @@ public class DesktopLauncher {
         config.addIcon("mik_icon.png", Files.FileType.Internal);
         
         Game game = new Game();
-        if (args[0].equals("-debug")) {
+        if (args.length != 0 && args[0].equals("-debug")) {
             game.debugMode = true;
         }
         new LwjglApplication(game, config);
