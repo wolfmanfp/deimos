@@ -49,7 +49,7 @@ public class PlayScreen implements Screen {
     private OrthogonalTiledMapRenderer mapRenderer;
     
     private Player player;
-    //private Array<Enemy> enemies;
+    private Array<Enemy> enemies;
     
     private boolean musicIsMuted = false;
     private boolean debug = false;
@@ -62,15 +62,15 @@ public class PlayScreen implements Screen {
         world.setContactListener(contactListener);
         
         camera = new OrthographicCamera();
-        camera.setToOrtho(false, WIDTH, HEIGHT);
+        camera.setToOrtho(false, WIDTH / PPM, HEIGHT / PPM);
         
-        //if (game.debugMode) {
+        if (game.debugMode) {
             debugCamera = new OrthographicCamera();
             debugCamera.setToOrtho(false, WIDTH / PPM, HEIGHT / PPM);
             debugRenderer = new Box2DDebugRenderer();
-        //}
+        }
         
-        //enemies = new Array<>();
+        enemies = new Array<>();
         definePlayer();
         loadMap();
         
@@ -84,7 +84,7 @@ public class PlayScreen implements Screen {
                 .setPosition(100, 100)
                 .addFixture(
                         new FixtureBuilder()
-                            .setPolygonShape(13, 13, 0, 0)
+                            .setPolygonShape(20, 23, 0, 0)
                             .setFilter(PLAYER_BIT, (short)(GROUND_BIT|ENEMY_BIT|BULLET_BIT))
                             .build()
                 )
@@ -96,7 +96,7 @@ public class PlayScreen implements Screen {
     private void loadMap() {
         mapLoader = new TmxMapLoader();
         map = mapLoader.load(MAINGAME + "/maps/level.tmx");
-        mapRenderer = new OrthogonalTiledMapRenderer(map, 1/PPM);
+        mapRenderer = new OrthogonalTiledMapRenderer(map, 1f / PPM);
         
         for (MapObject object : map.getLayers().get("collision").getObjects().getByType(RectangleMapObject.class)) {
             Rectangle rect = ((RectangleMapObject) object).getRectangle();
@@ -112,7 +112,7 @@ public class PlayScreen implements Screen {
                 .build();
         }
         
-        /*for (MapObject object : map.getLayers().get("enemies").getObjects().getByType(RectangleMapObject.class)) {
+        for (MapObject object : map.getLayers().get("enemies").getObjects().getByType(RectangleMapObject.class)) {
             Rectangle rect = ((RectangleMapObject) object).getRectangle();
 
             Body b = new BodyBuilder(world).isDynamic()
@@ -127,7 +127,7 @@ public class PlayScreen implements Screen {
             Enemy e = new Enemy(b);
             b.setUserData(e);
             enemies.add(e);
-        }*/
+        }
     }
     
     @Override
@@ -138,23 +138,23 @@ public class PlayScreen implements Screen {
     public void render(float delta) {
         update(delta);
         
+        game.batch.setProjectionMatrix(camera.combined);
         setCameraPosition(camera);
         camera.update();
         
         mapRenderer.setView(camera);
         mapRenderer.render();
         
-        game.batch.setProjectionMatrix(camera.combined);
         game.batch.begin();
         player.draw(game.batch);
         game.batch.end();
         
-        //if (debug) {
+        if (debug) {
             game.batch.setProjectionMatrix(debugCamera.combined);
             setCameraPosition(debugCamera);
             debugCamera.update();
             debugRenderer.render(world, debugCamera.combined);
-        //}
+        }
     }
     
     private void update(float delta) {
