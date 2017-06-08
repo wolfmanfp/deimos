@@ -25,6 +25,7 @@ import static hu.wolfman.deimos.Constants.*;
 import hu.wolfman.deimos.entities.Enemy;
 import hu.wolfman.deimos.physics.BodyBuilder;
 import hu.wolfman.deimos.physics.FixtureBuilder;
+import hu.wolfman.deimos.tools.Logger;
 
 /**
  *
@@ -44,7 +45,7 @@ public class PlayScreen implements Screen {
     private OrthogonalTiledMapRenderer mapRenderer;
     
     private Player player;
-    private Array<Enemy> enemies;
+    //private Array<Enemy> enemies;
     
     private boolean musicIsMuted = false;
     private boolean debug = false;
@@ -59,11 +60,11 @@ public class PlayScreen implements Screen {
         camera = new OrthographicCamera();
         camera.setToOrtho(false, WIDTH / PPM, HEIGHT / PPM);
         
-        if (game.debugMode) {
+        //if (game.debugMode) {
             debugRenderer = new Box2DDebugRenderer();
-        }
+        //}
         
-        enemies = new Array<>();
+        //enemies = new Array<>();
         definePlayer();
         loadMap();
         
@@ -104,7 +105,7 @@ public class PlayScreen implements Screen {
                 .build();
         }
         
-        for (MapObject object : map.getLayers().get("enemies").getObjects().getByType(RectangleMapObject.class)) {
+        /*for (MapObject object : map.getLayers().get("enemies").getObjects().getByType(RectangleMapObject.class)) {
             Rectangle rect = ((RectangleMapObject) object).getRectangle();
 
             Body b = new BodyBuilder(world).isDynamic()
@@ -119,7 +120,7 @@ public class PlayScreen implements Screen {
             Enemy e = new Enemy(b);
             b.setUserData(e);
             enemies.add(e);
-        }
+        }*/
     }
     
     @Override
@@ -141,17 +142,21 @@ public class PlayScreen implements Screen {
         mapRenderer.render();
         
         game.batch.setProjectionMatrix(camera.combined);
+        game.batch.begin();
         player.draw(game.batch);
+        game.batch.end();
         
-        if (debug) {
+        //if (debug) {
             debugRenderer.render(world, camera.combined);
-        }
+        //}
     }
     
     private void update(float delta) {
         handleInput();
         world.step(delta, 6, 2);
         player.update(delta);
+        camera.update();
+        mapRenderer.setView(camera);
     }
     
     private void handleInput() {
@@ -166,7 +171,7 @@ public class PlayScreen implements Screen {
                 player.moveRight();
             }
             if (Gdx.input.isKeyJustPressed(Keys.CONTROL_LEFT)) {
-                player.fire();
+                //player.fire();
             }
             if (Gdx.input.isKeyJustPressed(Keys.M)) {
                 if (!musicIsMuted) {
@@ -183,6 +188,7 @@ public class PlayScreen implements Screen {
             }
         }
         if (Gdx.input.isKeyPressed(Keys.ESCAPE)) {
+            Logger.get().log("Kilépés a játékból");
             Gdx.app.exit();
         }
     }

@@ -6,6 +6,7 @@ import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.utils.Disposable;
 import hu.wolfman.deimos.tools.Logger;
 import java.util.HashMap;
 import java.util.Map;
@@ -14,7 +15,7 @@ import java.util.Map;
  * A játék textúráit, hangjait, betűtípusait kezelő osztály.
  * @author Farkas Péter
  */
-public class Resources {
+public class Resources implements Disposable{
     private Map<String, String> items;
     private AssetManager manager;
     private String game;
@@ -50,6 +51,13 @@ public class Resources {
      */
     public void finishLoading() {
         manager.finishLoading();
+    }
+    
+    /**
+     * Az AssetManager update() metódusához nyújt elérést.
+     */
+    public void update() {
+        manager.update();
     }
     
     /**
@@ -148,6 +156,11 @@ public class Resources {
      */
     public BitmapFont bitmapFont(String id) {
         return manager.get(items.get(id), BitmapFont.class);
+    }
+
+    @Override
+    public void dispose() {
+        manager.dispose();
     }
     
 }

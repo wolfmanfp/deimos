@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package hu.wolfman.deimos.physics;
 
 import com.badlogic.gdx.physics.box2d.Contact;
@@ -26,8 +21,6 @@ public class ContactListener
         int collisionDefinition = fixA.getFilterData().categoryBits | fixB.getFilterData().categoryBits;
         
         switch(collisionDefinition) {
-            case PLAYER_BIT | GROUND_BIT:
-                break;
             case PLAYER_BIT | ENEMY_BIT:
                 break;
             case BULLET_BIT | ENEMY_BIT:
@@ -35,8 +28,6 @@ public class ContactListener
             case BULLET_BIT | PLAYER_BIT:
                 break;
             case BULLET_BIT | GROUND_BIT:
-                break;
-            case ENEMY_BIT | GROUND_BIT:
                 break;
         }
     }
