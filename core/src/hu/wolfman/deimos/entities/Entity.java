@@ -1,7 +1,6 @@
 package hu.wolfman.deimos.entities;
 
 import com.badlogic.gdx.graphics.g2d.Animation;
-import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.physics.box2d.Body;
@@ -17,15 +16,14 @@ public abstract class Entity extends Sprite {
 
     public Entity(Body body) {
         this.body = body;
-        body.setUserData(this);
     }
     
     public float getPosX() {
-        return body.getPosition().x * PPM;
+        return body.getPosition().x;
     }
     
     public float getPosY() {
-        return body.getPosition().y * PPM;
+        return body.getPosition().y;
     }
     
     public float getVelocityX() {
@@ -46,7 +44,7 @@ public abstract class Entity extends Sprite {
         for (int i = 0; i < numOfFrames; i++) {
             frames.add(new TextureRegion(region, i*size, 0, size, size));
         }
-        return new Animation(0.1f, frames);
+        return new Animation<>(0.1f, frames);
     }
     
     public abstract void update(float delta);

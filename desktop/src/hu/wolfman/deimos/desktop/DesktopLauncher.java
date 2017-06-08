@@ -11,8 +11,8 @@ public class DesktopLauncher {
         LwjglApplicationConfiguration config = 
                 new LwjglApplicationConfiguration();
         config.title = TITLE;
-        config.width = WIDTH * 2;
-        config.height = HEIGHT * 2;
+        config.width = WIDTH;
+        config.height = HEIGHT;
         config.addIcon("mik_icon.png", Files.FileType.Internal);
         
         Game game = new Game();

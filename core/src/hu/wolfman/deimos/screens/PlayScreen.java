@@ -8,6 +8,7 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.maps.MapObject;
 import com.badlogic.gdx.maps.objects.RectangleMapObject;
 import com.badlogic.gdx.maps.tiled.TiledMap;
+import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.math.Rectangle;
@@ -16,6 +17,8 @@ import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.utils.viewport.FitViewport;
+import com.badlogic.gdx.utils.viewport.Viewport;
 import hu.wolfman.deimos.Game;
 import hu.wolfman.deimos.Resources;
 import hu.wolfman.deimos.entities.Player;
@@ -36,6 +39,7 @@ public class PlayScreen implements Screen {
     private Music music;
     
     private OrthographicCamera camera;
+    private OrthographicCamera debugCamera;
     private World world;
     private ContactListener contactListener;
     private Box2DDebugRenderer debugRenderer;
@@ -58,9 +62,11 @@ public class PlayScreen implements Screen {
         world.setContactListener(contactListener);
         
         camera = new OrthographicCamera();
-        camera.setToOrtho(false, WIDTH / PPM, HEIGHT / PPM);
+        camera.setToOrtho(false, WIDTH, HEIGHT);
         
         //if (game.debugMode) {
+            debugCamera = new OrthographicCamera();
+            debugCamera.setToOrtho(false, WIDTH / PPM, HEIGHT / PPM);
             debugRenderer = new Box2DDebugRenderer();
         //}
         
@@ -84,6 +90,7 @@ public class PlayScreen implements Screen {
                 )
                 .build();
         player = new Player(body);
+        body.setUserData(player);
     }
     
     private void loadMap() {
@@ -131,11 +138,7 @@ public class PlayScreen implements Screen {
     public void render(float delta) {
         update(delta);
         
-        camera.position.set(
-                player.getPosX() + WIDTH / 2,
-                HEIGHT / 2,
-                0
-        );
+        setCameraPosition(camera);
         camera.update();
         
         mapRenderer.setView(camera);
@@ -147,7 +150,10 @@ public class PlayScreen implements Screen {
         game.batch.end();
         
         //if (debug) {
-            debugRenderer.render(world, camera.combined);
+            game.batch.setProjectionMatrix(debugCamera.combined);
+            setCameraPosition(debugCamera);
+            debugCamera.update();
+            debugRenderer.render(world, debugCamera.combined);
         //}
     }
     
@@ -155,8 +161,6 @@ public class PlayScreen implements Screen {
         handleInput();
         world.step(delta, 6, 2);
         player.update(delta);
-        camera.update();
-        mapRenderer.setView(camera);
     }
     
     private void handleInput() {
@@ -165,10 +169,10 @@ public class PlayScreen implements Screen {
                 player.jump();
             }
             if (Gdx.input.isKeyPressed(Keys.RIGHT) && player.getVelocityX() <= 2) {
-                player.moveLeft();
+                player.moveRight();
             }
             if (Gdx.input.isKeyPressed(Keys.LEFT) && player.getVelocityY() >= -2) {
-                player.moveRight();
+                player.moveLeft();
             }
             if (Gdx.input.isKeyJustPressed(Keys.CONTROL_LEFT)) {
                 //player.fire();
@@ -192,7 +196,21 @@ public class PlayScreen implements Screen {
             Gdx.app.exit();
         }
     }
-
+     
+    private void setCameraPosition(OrthographicCamera camera) {
+        float playerPositionX = player.getPosX();
+        float mapWidth = map.getProperties().get("width", Integer.class) * 
+                ((TiledMapTileLayer)map.getLayers().get(0)).getTileWidth() / PPM;
+        
+        if (playerPositionX < camera.viewportWidth / 2) {
+            camera.position.x = camera.viewportWidth / 2;
+        }
+        else if (playerPositionX > mapWidth - camera.viewportWidth / 2) {
+            camera.position.x = mapWidth - camera.viewportWidth / 2;
+        }
+        else camera.position.x = playerPositionX;
+    }
+    
     @Override
     public void resize(int width, int height) {
     }
@@ -219,5 +237,7 @@ public class PlayScreen implements Screen {
         }
         //hud.dispose();
     }
+
+    
 
 }
