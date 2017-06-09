@@ -1,24 +1,27 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package hu.wolfman.deimos.entities;
 
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.physics.box2d.Body;
+import hu.wolfman.deimos.Resources;
 
 /**
  *
- * @author Wolfman
+ * @author Farkas Péter
  */
 public class Enemy extends Entity {
+    private final TextureRegion enemyIdle;
 
     public Enemy(Body body) {
         super(body);
+        enemyIdle = new TextureRegion(Resources.get().texture("enemy"));
+        
+        setBounds(0, 0, 50, 50);
+        setRegion(enemyIdle);
     }
 
     @Override
     public void update(float delta) {
+        setPosition(getPosX() - getWidth()/ 2, getPosY() - getWidth() / 2);
     }
     
 }

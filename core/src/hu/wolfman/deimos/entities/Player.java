@@ -11,7 +11,7 @@ import hu.wolfman.deimos.Resources;
  * @author Farkas Péter
  */
 public class Player extends Entity {
-    public enum State {STANDING, DEAD, RUNNING, JUMPING, SHOOTING, FALLING}
+    public enum State {IDLE, DEAD, RUNNING, JUMPING, SHOOTING, FALLING}
     public State previousState;
     public State currentState;
     
@@ -28,7 +28,7 @@ public class Player extends Entity {
     public Player(Body body) {
         super(body);
         
-        currentState = previousState = State.STANDING;
+        currentState = previousState = State.IDLE;
         
         playerStanding = Resources.get().textureRegion("player", "player_standing");
         playerJumping = Resources.get().textureRegion("player", "player_jumping");
@@ -57,7 +57,7 @@ public class Player extends Entity {
                 region = (TextureRegion) playerRunning.getKeyFrame(stateTimer, true);
                 break;
             case FALLING:
-            case STANDING:
+            case IDLE:
             default:
                 region = playerStanding;
                 break;
@@ -91,7 +91,7 @@ public class Player extends Entity {
         else if (getVelocityX() != 0) {
             return State.RUNNING;
         }
-        else return State.STANDING;
+        else return State.IDLE;
     }
 
     public void moveLeft() {

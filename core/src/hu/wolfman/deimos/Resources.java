@@ -3,6 +3,7 @@ package hu.wolfman.deimos;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -156,6 +157,30 @@ public class Resources implements Disposable{
      */
     public BitmapFont bitmapFont(String id) {
         return manager.get(items.get(id), BitmapFont.class);
+    }
+    
+    /**
+     * Textúra betöltése a játék megfelelő könyvtárából.
+     * @param id Azonosító, amivel hivatkozunk betöltésnél a betűtípusra.
+     * @param filename A textúra neve.
+     */
+    public void loadTexture(String id, String filename) {
+        String path = game + "/textures/" + filename;
+        try {
+            manager.load(path, Texture.class);
+            items.put(id, path);
+        } catch (Exception e) {
+            Logger.get().log(path + " nem található!");
+        }
+    }
+    
+    /**
+     * Egy tárolt textúra megkeresése.
+     * @param id A textúra azonosítója.
+     * @return Textúra
+     */
+    public Texture texture(String id) {
+        return manager.get(items.get(id), Texture.class);
     }
 
     @Override

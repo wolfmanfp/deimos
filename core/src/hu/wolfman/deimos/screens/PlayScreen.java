@@ -5,6 +5,7 @@ import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.maps.MapObject;
 import com.badlogic.gdx.maps.objects.RectangleMapObject;
 import com.badlogic.gdx.maps.tiled.TiledMap;
@@ -17,8 +18,6 @@ import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.Array;
-import com.badlogic.gdx.utils.viewport.FitViewport;
-import com.badlogic.gdx.utils.viewport.Viewport;
 import hu.wolfman.deimos.Game;
 import hu.wolfman.deimos.Resources;
 import hu.wolfman.deimos.entities.Player;
@@ -36,6 +35,8 @@ import hu.wolfman.deimos.tools.Logger;
  */
 public class PlayScreen implements Screen {
     private final Game game;
+    
+    private TextureRegion background;
     private Music music;
     
     private OrthographicCamera camera;
@@ -64,16 +65,17 @@ public class PlayScreen implements Screen {
         camera = new OrthographicCamera();
         camera.setToOrtho(false, WIDTH / PPM, HEIGHT / PPM);
         
-        if (game.debugMode) {
+        //if (game.debugMode) {
             debugCamera = new OrthographicCamera();
             debugCamera.setToOrtho(false, WIDTH / PPM, HEIGHT / PPM);
             debugRenderer = new Box2DDebugRenderer();
-        }
+        //}
         
         enemies = new Array<>();
         definePlayer();
         loadMap();
         
+        background = new TextureRegion(Resources.get().texture("background"));
         music = Resources.get().music("GameMusic");
         music.setLooping(true);
         music.play();
@@ -119,7 +121,7 @@ public class PlayScreen implements Screen {
                 .setPosition(rect.getX(), rect.getY())
                 .addFixture(
                         new FixtureBuilder()
-                            .setCircleShape(6.0f)
+                            .setPolygonShape(23, 23, 0, 0)
                             .setFilter(ENEMY_BIT, (short)(PLAYER_BIT|GROUND_BIT|BULLET_BIT))
                             .build()
                 )
@@ -147,20 +149,26 @@ public class PlayScreen implements Screen {
         
         game.batch.begin();
         player.draw(game.batch);
+        for (Enemy enemy : enemies) {
+            enemy.draw(game.batch);
+        }
         game.batch.end();
         
-        if (debug) {
+        //if (debug) {
             game.batch.setProjectionMatrix(debugCamera.combined);
             setCameraPosition(debugCamera);
             debugCamera.update();
             debugRenderer.render(world, debugCamera.combined);
-        }
+        //}
     }
     
     private void update(float delta) {
         handleInput();
         world.step(delta, 6, 2);
         player.update(delta);
+        for (Enemy enemy : enemies) {
+            enemy.update(delta);
+        }
     }
     
     private void handleInput() {
