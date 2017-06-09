@@ -5,7 +5,6 @@ import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.maps.MapObject;
 import com.badlogic.gdx.maps.objects.RectangleMapObject;
 import com.badlogic.gdx.maps.tiled.TiledMap;
@@ -35,8 +34,7 @@ import hu.wolfman.deimos.tools.Logger;
  */
 public class PlayScreen implements Screen {
     private final Game game;
-    
-    private TextureRegion background;
+    private HeadsUpDisplay hud;
     private Music music;
     
     private OrthographicCamera camera;
@@ -65,17 +63,18 @@ public class PlayScreen implements Screen {
         camera = new OrthographicCamera();
         camera.setToOrtho(false, WIDTH / PPM, HEIGHT / PPM);
         
-        //if (game.debugMode) {
+        if (game.debugMode) {
             debugCamera = new OrthographicCamera();
             debugCamera.setToOrtho(false, WIDTH / PPM, HEIGHT / PPM);
             debugRenderer = new Box2DDebugRenderer();
-        //}
+        }
         
         enemies = new Array<>();
         definePlayer();
         loadMap();
         
-        background = new TextureRegion(Resources.get().texture("background"));
+        hud = new HeadsUpDisplay(game.batch, player);
+        
         music = Resources.get().music("GameMusic");
         music.setLooping(true);
         music.play();
@@ -153,13 +152,16 @@ public class PlayScreen implements Screen {
             enemy.draw(game.batch);
         }
         game.batch.end();
-        
-        //if (debug) {
+
+        if (debug) {
             game.batch.setProjectionMatrix(debugCamera.combined);
             setCameraPosition(debugCamera);
             debugCamera.update();
             debugRenderer.render(world, debugCamera.combined);
-        //}
+        }
+        
+        game.batch.setProjectionMatrix(hud.getCamera().combined);
+        hud.draw();
     }
     
     private void update(float delta) {
@@ -169,6 +171,7 @@ public class PlayScreen implements Screen {
         for (Enemy enemy : enemies) {
             enemy.update(delta);
         }
+        hud.update();
     }
     
     private void handleInput() {
@@ -243,7 +246,7 @@ public class PlayScreen implements Screen {
         if (debugRenderer != null) {
             debugRenderer.dispose();
         }
-        //hud.dispose();
+        hud.dispose();
     }
 
     
