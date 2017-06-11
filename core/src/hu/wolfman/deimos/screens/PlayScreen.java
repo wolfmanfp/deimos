@@ -120,7 +120,7 @@ public class PlayScreen implements Screen {
                 .setPosition(rect.getX(), rect.getY())
                 .addFixture(
                         new FixtureBuilder()
-                            .setPolygonShape(23, 23, 0, 0)
+                            .setPolygonShape(12, 12, 0, 0)
                             .setFilter(ENEMY_BIT, (short)(PLAYER_BIT|GROUND_BIT|BULLET_BIT))
                             .build()
                 )

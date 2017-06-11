@@ -15,7 +15,7 @@ public class Enemy extends Entity {
         super(body);
         enemyIdle = new TextureRegion(Resources.get().texture("enemy"));
         
-        setBounds(0, 0, 50, 50);
+        setBounds(0, 0, 30, 50);
         setRegion(enemyIdle);
     }
 
