@@ -12,7 +12,7 @@ public class DesktopLauncher {
                 new Lwjgl3ApplicationConfiguration();
         config.setTitle(TITLE);
         config.setWindowedMode(WIDTH * 2, HEIGHT * 2);
-        config.setWindowIcon("mik_icon.png");
+        config.setWindowIcon("icon.png");
         
         Game game = new Game();
         if (args.length != 0 && args[0].equals("-debug")) {

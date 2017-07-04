@@ -112,5 +112,7 @@ gradle-app.setting
 ## OS Specific
 .DS_Store
 Thumbs.db
+
+## Other
 /.nb-gradle/
 *.log
