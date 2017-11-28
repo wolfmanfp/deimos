@@ -20,13 +20,13 @@ import com.badlogic.gdx.utils.Array;
 import hu.wolfman.deimos.Game;
 import hu.wolfman.deimos.Resources;
 import hu.wolfman.deimos.entities.Player;
-import hu.wolfman.deimos.physics.ContactListener;
-import static hu.wolfman.deimos.physics.BoxConst.*;
-import static hu.wolfman.deimos.Constants.*;
 import hu.wolfman.deimos.entities.Enemy;
 import hu.wolfman.deimos.physics.BodyBuilder;
+import hu.wolfman.deimos.physics.ContactListener;
 import hu.wolfman.deimos.physics.FixtureBuilder;
 import hu.wolfman.deimos.tools.Logger;
+import static hu.wolfman.deimos.physics.BoxConst.*;
+import static hu.wolfman.deimos.Constants.*;
 
 /**
  *
@@ -73,7 +73,7 @@ public class PlayScreen implements Screen {
         definePlayer();
         loadMap();
         
-        hud = new HeadsUpDisplay(game.batch, player);
+        hud = new HeadsUpDisplay(game, player);
         
         music = Resources.get().music("GameMusic");
         music.setLooping(true);
@@ -203,7 +203,7 @@ public class PlayScreen implements Screen {
             }
         }
         if (Gdx.input.isKeyPressed(Keys.ESCAPE)) {
-            Logger.get().log("Kilépés a játékból");
+            Logger.log("Kilépés a játékból");
             Gdx.app.exit();
         }
     }

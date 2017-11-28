@@ -21,7 +21,8 @@ public class Game extends com.badlogic.gdx.Game {
         batch = new SpriteBatch();
         loadAssets();
         setScreen(new PlayScreen(this));
-        Logger.get().log("A játék sikeresen elindult.");
+        Logger.log("A játék sikeresen elindult.");
+
     }
     
     private void loadAssets() {
@@ -49,7 +50,7 @@ public class Game extends com.badlogic.gdx.Game {
     
     @Override
     public void resume() {
-        super.resume(); 
+        super.resume();
     }
 
     @Override
@@ -59,6 +60,6 @@ public class Game extends com.badlogic.gdx.Game {
 
     @Override
     public void resize(int width, int height) {
-        super.resize(width, height); 
+        super.resize(width, height);
     }
 }

@@ -18,7 +18,7 @@ public class DesktopLauncher {
         if (args.length != 0 && args[0].equals("-debug")) {
             game.debugMode = true;
             config.setTitle(TITLE + " [debug]");
-            Logger.get().log("Debug módban indítva.");
+            Logger.log("Debug módban indítva.");
         }
 
         new Lwjgl3Application(game, config);

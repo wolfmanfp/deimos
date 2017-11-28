@@ -1,5 +1,6 @@
 package hu.wolfman.deimos.screens;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
@@ -12,6 +13,7 @@ import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.Disposable;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
+import hu.wolfman.deimos.Game;
 import hu.wolfman.deimos.Resources;
 import hu.wolfman.deimos.entities.Player;
 import static hu.wolfman.deimos.Constants.*;
@@ -22,15 +24,17 @@ import static hu.wolfman.deimos.Constants.*;
  */
 public class HeadsUpDisplay implements Disposable {
     public Stage stage;
+    private boolean debugMode;
     private Viewport viewport;
     private Player player;
-    private Label scoreLabel, healthLabel;
+    private Label scoreLabel, healthLabel, fpsLabel;
 
-    public HeadsUpDisplay(SpriteBatch batch, Player player) {
+    public HeadsUpDisplay(Game game, Player player) {
         this.player = player;
-        
+        this.debugMode = game.debugMode;
+
         viewport = new FitViewport(WIDTH, HEIGHT, new OrthographicCamera());
-        stage = new Stage(viewport, batch);
+        stage = new Stage(viewport, game.batch);
         
         createHud();
     }
@@ -46,23 +50,29 @@ public class HeadsUpDisplay implements Disposable {
         table.setFillParent(true);
         
         scoreLabel = new Label(
-                String.format("%06d", player.getPoints()), 
+                player.getPoints() + " $",
                 style
         );
         healthLabel = new Label(
-                String.format("%d", player.getHealth()), 
+                Integer.toString(player.getHealth()),
+                style
+        );
+        fpsLabel = new Label(
+                "",
                 style
         );
         
         table.add(scoreLabel).expandX().padTop(10).align(Align.left);
         table.add(healthLabel).expandX().padTop(10).align(Align.right);
-        
+        if (debugMode) table.add(fpsLabel).expandX().padBottom(10).align(Align.left);
+
         stage.addActor(table);
     }
     
     public void update() {
-        scoreLabel.setText(String.format("%06d", player.getPoints()));
-        healthLabel.setText(String.format("%d", player.getHealth()));
+        scoreLabel.setText(player.getPoints() + " $");
+        healthLabel.setText(Integer.toString(player.getHealth()));
+        if (debugMode) fpsLabel.setText(Integer.toString(Gdx.graphics.getFramesPerSecond()) + " fps");
     }
     
     public Camera getCamera() {

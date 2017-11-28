@@ -15,19 +15,11 @@ public class LoggerTest {
     }
 
     /**
-     * A get metódus tesztje.
-     */
-    @Test
-    public void testGet() {
-        assertFalse(Logger.get() == null);
-    }
-    
-    /**
      * A log metódus tesztje.
      */
     @Test
     public void testLog() {
-        Logger.get().log("Teszt");
+        Logger.log("Teszt");
         
         try (BufferedReader reader = new BufferedReader(new FileReader("deimos.log"))) {
             String logfile = reader.readLine();

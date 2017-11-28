@@ -72,7 +72,7 @@ public class Resources implements Disposable{
             manager.load(path, Sound.class);
             items.put(id, path);
         } catch (Exception e) {
-            Logger.get().log(path + " nem található!");
+            Logger.log(path + " nem található!");
         }
     }
     
@@ -97,7 +97,7 @@ public class Resources implements Disposable{
             manager.load(path, Music.class);
             items.put(id, path);
         } catch (Exception e) {
-            Logger.get().log(path + " nem található!");
+            Logger.log(path + " nem található!");
         }
     }
     
@@ -121,7 +121,7 @@ public class Resources implements Disposable{
             manager.load(path, TextureAtlas.class);
             items.put(id, path);
         } catch (Exception e) {
-            Logger.get().log(path + " nem található!");
+            Logger.log(path + " nem található!");
         }
     }
     
@@ -146,7 +146,7 @@ public class Resources implements Disposable{
             manager.load(path, BitmapFont.class);
             items.put(id, path);
         } catch (Exception e) {
-            Logger.get().log(path + " nem található!");
+            Logger.log(path + " nem található!");
         }
     }
     
@@ -170,7 +170,7 @@ public class Resources implements Disposable{
             manager.load(path, Texture.class);
             items.put(id, path);
         } catch (Exception e) {
-            Logger.get().log(path + " nem található!");
+            Logger.log(path + " nem található!");
         }
     }
     

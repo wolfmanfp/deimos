@@ -5,9 +5,9 @@ import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.World;
-import static hu.wolfman.deimos.physics.BoxConst.PPM;
 import java.util.ArrayList;
 import java.util.List;
+import static hu.wolfman.deimos.physics.BoxConst.PPM;
 
 /**
  * Box2D testeket létrehozó osztály.
@@ -46,9 +46,9 @@ public class BodyBuilder {
     
     public Body build() {
         Body body = world.createBody(bodyDef);
-        fixtures.forEach((f) -> {
-            body.createFixture(f);
-        });
+        for (FixtureDef fixture : fixtures) {
+            body.createFixture(fixture);
+        }
         return body;
     }
     
