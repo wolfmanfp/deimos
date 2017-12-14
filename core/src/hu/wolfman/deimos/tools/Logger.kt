@@ -24,7 +24,7 @@ object Logger {
                 writer.write("[$timeLog] $message\r\n")
             }
         } catch (e: Exception) {
-            Logger.log("Errorception")
+            e.printStackTrace()
         }
     }
 

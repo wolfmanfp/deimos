@@ -108,7 +108,7 @@ project(":core") {
         testCompile "com.badlogicgames.gdx:gdx-box2d-platform:$gdxVersion:natives-desktop"
     }
 }
-
+/*
 project(":ios-moe") {
     apply plugin: "moe"
 
@@ -121,3 +121,4 @@ project(":ios-moe") {
         natives "com.badlogicgames.gdx:gdx-box2d-platform:$gdxVersion:natives-ios"
     }
 }
+*/
