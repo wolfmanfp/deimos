@@ -4,7 +4,7 @@ sourceCompatibility = 1.8
 sourceSets.main.java.srcDirs = [ "src/" ]
 
 project.ext.mainClassName = "hu.wolfman.deimos.desktop.DesktopLauncher"
-project.ext.assetsDir = new File("../android/assets");
+project.ext.assetsDir = new File("../android/assets")
 
 task run(dependsOn: classes, type: JavaExec) {
     main = project.mainClassName
@@ -35,3 +35,11 @@ task dist(type: Jar) {
 }
 
 dist.dependsOn classes
+
+task buildExe(type: Exec, dependsOn: dist) {
+    commandLine 'C:\\Program Files (x86)\\Launch4j\\launch4jc.exe', 'launch4j.xml'
+}
+
+task buildInstaller(type: Exec, dependsOn: buildExe) {
+    commandLine 'C:\\Program Files (x86)\\Inno Setup 5\\iscc.exe', 'installer.iss'
+}

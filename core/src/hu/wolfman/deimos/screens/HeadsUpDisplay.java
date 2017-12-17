@@ -49,18 +49,9 @@ public class HeadsUpDisplay implements Disposable {
         table.top();
         table.setFillParent(true);
         
-        scoreLabel = new Label(
-                player.getPoints() + " $",
-                style
-        );
-        healthLabel = new Label(
-                Integer.toString(player.getHealth()),
-                style
-        );
-        fpsLabel = new Label(
-                "",
-                style
-        );
+        scoreLabel = new Label("", style);
+        healthLabel = new Label("", style);
+        fpsLabel = new Label("", style);
         
         table.add(scoreLabel).expandX().padTop(10).align(Align.left);
         table.add(healthLabel).expandX().padTop(10).align(Align.right);
@@ -70,9 +61,16 @@ public class HeadsUpDisplay implements Disposable {
     }
     
     public void update() {
-        scoreLabel.setText(player.getPoints() + " $");
-        healthLabel.setText(Integer.toString(player.getHealth()));
-        if (debugMode) fpsLabel.setText(Integer.toString(Gdx.graphics.getFramesPerSecond()) + " fps");
+        scoreLabel.setText(
+                String.format("%06d", player.getPoints())
+        );
+        healthLabel.setText(
+                String.format("%d", player.getHealth())
+        );
+        if (debugMode)
+            fpsLabel.setText(
+                    String.format("%d fps", Gdx.graphics.getFramesPerSecond())
+            );
     }
     
     public Camera getCamera() {
