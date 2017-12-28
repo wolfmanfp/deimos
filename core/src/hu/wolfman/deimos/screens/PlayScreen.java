@@ -86,7 +86,7 @@ public class PlayScreen implements Screen {
                 .addFixture(
                         new FixtureBuilder()
                             .setPolygonShape(20, 23, 0, 0)
-                            .setFilter(PLAYER_BIT, (short)(GROUND_BIT|ENEMY_BIT|BULLET_BIT))
+                            .setFilter(PLAYER_BIT, (GROUND_BIT|ENEMY_BIT|BULLET_BIT))
                             .build()
                 )
                 .build();
@@ -96,7 +96,7 @@ public class PlayScreen implements Screen {
     
     private void loadMap() {
         mapLoader = new TmxMapLoader();
-        map = mapLoader.load(MAINGAME + "/maps/level.tmx");
+        map = mapLoader.load(MAIN_GAME + TEST_LEVEL);
         mapRenderer = new OrthogonalTiledMapRenderer(map, 1f / PPM);
         
         for (MapObject object : map.getLayers().get("collision").getObjects().getByType(RectangleMapObject.class)) {
@@ -107,7 +107,7 @@ public class PlayScreen implements Screen {
                 .addFixture(
                         new FixtureBuilder()
                             .setPolygonShape(rect.getWidth() / 2, rect.getHeight() / 2, 0, 0)
-                            .setFilter(GROUND_BIT, (short)(PLAYER_BIT|ENEMY_BIT|BULLET_BIT))
+                            .setFilter(GROUND_BIT, (PLAYER_BIT|ENEMY_BIT|BULLET_BIT))
                             .build()
                 )
                 .build();
@@ -121,7 +121,7 @@ public class PlayScreen implements Screen {
                 .addFixture(
                         new FixtureBuilder()
                             .setPolygonShape(12, 12, 0, 0)
-                            .setFilter(ENEMY_BIT, (short)(PLAYER_BIT|GROUND_BIT|BULLET_BIT))
+                            .setFilter(ENEMY_BIT, (PLAYER_BIT|GROUND_BIT|BULLET_BIT))
                             .build()
                 )
                 .build();
@@ -198,6 +198,19 @@ public class PlayScreen implements Screen {
                     musicIsMuted = false;
                 }
             }
+            if (Gdx.input.isKeyJustPressed(Keys.PLUS)) {
+                float currentVolume = music.getVolume();
+                if (currentVolume < 1.0f) {
+                    music.setVolume(currentVolume + 0.1f);
+                }
+            }
+            if (Gdx.input.isKeyJustPressed(Keys.MINUS)) {
+                float currentVolume = music.getVolume();
+                if (currentVolume > 0.0f) {
+                    music.setVolume(currentVolume - 0.1f);
+                }
+                else music.setVolume(0.0f);
+            }
             if (game.debugMode && Gdx.input.isKeyJustPressed(Keys.D)) {
                 debug = !debug;
             }
@@ -248,7 +261,5 @@ public class PlayScreen implements Screen {
         }
         hud.dispose();
     }
-
-    
 
 }

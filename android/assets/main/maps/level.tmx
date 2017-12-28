@@ -1,14 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.0" tiledversion="1.0.3" orientation="orthogonal" renderorder="right-down" width="50" height="8" tilewidth="35" tileheight="35" nextobjectid="31">
- <tileset firstgid="1" source="industrial.tsx"/>
+<map version="1.0.0" orientation="orthogonal" renderorder="right-down" width="50" height="8" tilewidth="35" tileheight="35" nextobjectid="31">
+ <tileset firstgid="1" name="industrial" tilewidth="35" tileheight="35" tilecount="112" columns="14">
+  <image source="industrial.png" width="490" height="280"/>
+ </tileset>
+ <tileset firstgid="113" name="far-buildings" tilewidth="35" tileheight="35" tilecount="35" columns="7">
+  <image source="far-buildings.png" width="256" height="192"/>
+ </tileset>
  <layer name="background" width="50" height="8">
   <data encoding="base64" compression="zlib">
-   eJxjYBgFo2AUjIJRMApIBwAGQAAB
+   eJzV1LcBgDAMAEGvTM6YnLMX5negwCqu+kZSIaOU2nHgxIUbD4ygZts8f+xh021cePARIEQER1hLkCJDjgIlYmGtQo0GLTr00MLaiAkzFqzYMAhrtvybr+0FwJXTWg==
   </data>
  </layer>
  <layer name="main" width="50" height="8">
   <data encoding="base64" compression="zlib">
-   eJxjYBgFo2AUUAKYgJgZilnI0G8NxDZAbEuGneTYRwugC8R6UFphYJ1CNtABYisGiPth/qEVQE4zQxWD0h4As9wC6Q==
+   eJxjYBgFo2AUUAJy0TCpwBqIbYDYlgQ9iUh4MABdINaD0goD6xSygQ4QWzFA3A/zD62AIRAbDXFsDMQACdAO2Q==
   </data>
  </layer>
  <objectgroup name="collision">

@@ -22,12 +22,11 @@ public class Game extends com.badlogic.gdx.Game {
         loadAssets();
         setScreen(new PlayScreen(this));
         Logger.log("A játék sikeresen elindult.");
-
     }
     
     private void loadAssets() {
         Resources.get().setGame(MAINGAME);
-        Resources.get().loadMusic("GameMusic", "Germ Factory.mp3");
+        Resources.get().loadMusic("GameMusic", "Low Level Action A.mp3");
         Resources.get().loadBitmapFont("hudFont", "PressStart2P.fnt");
         Resources.get().loadTextureAtlas("player", "player.pack");
         Resources.get().loadTexture("enemy", "enemy.png");

@@ -41,8 +41,8 @@ public class HeadsUpDisplay implements Disposable {
     
     private void createHud() {
         LabelStyle style = new LabelStyle(
-                Resources.get().bitmapFont("hudFont"),
-                Color.WHITE
+            Resources.get().bitmapFont("hudFont"),
+            Color.WHITE
         );
         
         Table table = new Table();
@@ -52,24 +52,33 @@ public class HeadsUpDisplay implements Disposable {
         scoreLabel = new Label("", style);
         healthLabel = new Label("", style);
         fpsLabel = new Label("", style);
-        
-        table.add(scoreLabel).expandX().padTop(10).align(Align.left);
-        table.add(healthLabel).expandX().padTop(10).align(Align.right);
-        if (debugMode) table.add(fpsLabel).expandX().padBottom(10).align(Align.left);
+
+        scoreLabel.setFontScale(0.5f);
+        healthLabel.setFontScale(0.5f);
+        fpsLabel.setFontScale(0.5f);
+
+        table.add(scoreLabel).expandX().padTop(10).padLeft(5).align(Align.left);
+        if (debugMode) {
+            table.add(healthLabel).expandX().padTop(10).align(Align.center);
+            table.add(fpsLabel).expandX().padTop(10).padRight(5).align(Align.right);
+        }
+        else {
+            table.add(healthLabel).expandX().padTop(10).padRight(5).align(Align.right);
+        }
 
         stage.addActor(table);
     }
     
     public void update() {
         scoreLabel.setText(
-                String.format("%06d", player.getPoints())
+            String.format("%06d", player.getPoints())
         );
         healthLabel.setText(
-                String.format("%d", player.getHealth())
+            String.format("%d", player.getHealth())
         );
         if (debugMode)
             fpsLabel.setText(
-                    String.format("%d fps", Gdx.graphics.getFramesPerSecond())
+                String.format("%d fps", Gdx.graphics.getFramesPerSecond())
             );
     }
     

@@ -33,9 +33,9 @@ public class FixtureBuilder {
         return this;
     }
     
-    public FixtureBuilder setFilter(short category, short mask) {
+    public FixtureBuilder setFilter(short category, int mask) {
         fixtureDef.filter.categoryBits = category;
-        fixtureDef.filter.maskBits = mask;
+        fixtureDef.filter.maskBits = (short)mask;
         return this;
     }
     
