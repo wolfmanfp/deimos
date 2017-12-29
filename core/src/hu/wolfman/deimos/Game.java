@@ -25,7 +25,8 @@ public class Game extends com.badlogic.gdx.Game {
     }
     
     private void loadAssets() {
-        Resources.get().setGame(MAINGAME);
+        Resources.get().setGame(MAIN_GAME);
+        Resources.get().loadSound("jump", "phaserUp1.mp3");
         Resources.get().loadMusic("GameMusic", "Low Level Action A.mp3");
         Resources.get().loadBitmapFont("hudFont", "PressStart2P.fnt");
         Resources.get().loadTextureAtlas("player", "player.pack");

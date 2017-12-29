@@ -177,6 +177,7 @@ public class PlayScreen implements Screen {
     private void handleInput() {
         if (player.currentState != Player.State.DEAD) {
             if (Gdx.input.isKeyJustPressed(Keys.UP)) {
+                Resources.get().sound("jump").play();
                 player.jump();
             }
             if (Gdx.input.isKeyPressed(Keys.RIGHT) && player.getVelocityX() <= 2) {
