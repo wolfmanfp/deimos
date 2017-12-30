@@ -19,7 +19,8 @@ import hu.wolfman.deimos.entities.Player;
 import static hu.wolfman.deimos.Constants.*;
 
 /**
- *
+ * A HUD-ot, azaz a képernyő tetején megjelenő
+ * információkat közlő elemet definiáló osztály.
  * @author Farkas Péter
  */
 public class HeadsUpDisplay implements Disposable {
@@ -38,7 +39,10 @@ public class HeadsUpDisplay implements Disposable {
         
         createHud();
     }
-    
+
+    /**
+     * Címkék létrehozása, hozzáadása a HUD-hoz.
+     */
     private void createHud() {
         LabelStyle style = new LabelStyle(
             Resources.get().bitmapFont("hudFont"),
@@ -68,7 +72,10 @@ public class HeadsUpDisplay implements Disposable {
 
         stage.addActor(table);
     }
-    
+
+    /**
+     * A megjelenő információk frissítése.
+     */
     public void update() {
         scoreLabel.setText(
             String.format("%06d", player.getPoints())

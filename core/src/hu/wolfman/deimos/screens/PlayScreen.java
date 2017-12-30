@@ -29,30 +29,40 @@ import static hu.wolfman.deimos.physics.BoxConst.*;
 import static hu.wolfman.deimos.Constants.*;
 
 /**
- *
+ * A játék fő képernyője.
+ * Itt zajlanak a játék eseményei, itt jelenik
+ * meg a pálya, a játékos és az ellenfelek.
  * @author Farkas Péter
  */
 public class PlayScreen implements Screen {
     private final Game game;
     private HeadsUpDisplay hud;
     private Music music;
-    
     private OrthographicCamera camera;
     private OrthographicCamera debugCamera;
+
+    //Box2D
     private World world;
     private ContactListener contactListener;
     private Box2DDebugRenderer debugRenderer;
-    
+
+    //Tiled pálya
     private TmxMapLoader mapLoader;
     private TiledMap map;
     private OrthogonalTiledMapRenderer mapRenderer;
-    
+
+    //Entitások
     private Player player;
     private Array<Enemy> enemies;
     
     private boolean musicIsMuted = false;
     private boolean debug = false;
 
+    /**
+     * A képernyő konstruktora, innen hívódik meg
+     * a HUD, a pálya és a játékos inicializálása.
+     * @param game A játék fő osztályának objektuma.
+     */
     public PlayScreen(Game game) {
         this.game = game;
         
@@ -79,7 +89,10 @@ public class PlayScreen implements Screen {
         music.setLooping(true);
         music.play();
     }
-    
+
+    /**
+     * A játékos karakter létrehozása.
+     */
     private void definePlayer() {
         Body body = new BodyBuilder(world).isDynamic()
                 .setPosition(100, 100)
@@ -93,7 +106,11 @@ public class PlayScreen implements Screen {
         player = new Player(body);
         body.setUserData(player);
     }
-    
+
+    /**
+     * A pálya betöltése, a rajta található platformok
+     * és ellenfelek létrehozása.
+     */
     private void loadMap() {
         mapLoader = new TmxMapLoader();
         map = mapLoader.load(MAIN_GAME + TEST_LEVEL);
@@ -135,6 +152,10 @@ public class PlayScreen implements Screen {
     public void show() {
     }
 
+    /**
+     * A pálya kirajzolása a képernyőre.
+     * @param delta Két frissítés között eltelt idő (általában 1/60 s).
+     */
     @Override
     public void render(float delta) {
         update(delta);
@@ -163,7 +184,11 @@ public class PlayScreen implements Screen {
         game.batch.setProjectionMatrix(hud.getCamera().combined);
         hud.draw();
     }
-    
+
+    /**
+     * A játék állapotának frissítése.
+     * @param delta Két frissítés között eltelt idő (általában 1/60 s).
+     */
     private void update(float delta) {
         handleInput();
         world.step(delta, 6, 2);
@@ -173,7 +198,11 @@ public class PlayScreen implements Screen {
         }
         hud.update();
     }
-    
+
+    /**
+     * Meghatározza, hogy megadott billentyű lenyomása
+     * esetén mi történjen.
+     */
     private void handleInput() {
         if (player.currentState != Player.State.DEAD) {
             if (Gdx.input.isKeyJustPressed(Keys.UP)) {
@@ -221,7 +250,11 @@ public class PlayScreen implements Screen {
             Gdx.app.exit();
         }
     }
-     
+
+    /**
+     * A kamera pozíciójának beállítása.
+     * @param camera Kameraobjektum
+     */
     private void setCameraPosition(OrthographicCamera camera) {
         float playerPositionX = player.getPosX();
         float mapWidth = map.getProperties().get("width", Integer.class) * 
@@ -252,6 +285,9 @@ public class PlayScreen implements Screen {
     public void hide() {
     }
 
+    /**
+     * A metódus a memóriát üríti bezáráskor.
+     */
     @Override
     public void dispose() {
         map.dispose();

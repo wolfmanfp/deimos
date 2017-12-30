@@ -13,6 +13,10 @@ import static hu.wolfman.deimos.physics.BoxConst.*;
 public class ContactListener 
         implements com.badlogic.gdx.physics.box2d.ContactListener {
 
+    /**
+     * A metódus megadja, mi történjen két objektum ütközésekor.
+     * @param contact Az ütköző fixtúrákat magába foglaló objektum.
+     */
     @Override
     public void beginContact(Contact contact) {
         Fixture fixA = contact.getFixtureA();

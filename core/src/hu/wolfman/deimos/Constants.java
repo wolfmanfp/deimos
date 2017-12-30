@@ -9,7 +9,7 @@ public class Constants {
     public static final int HEIGHT = 240;
     
     public static final int FPS = 60;
-    public static final float STEP = 1f / FPS;
+    public static final float DELTA = 1f / FPS;
     
     public static final String MAIN_GAME = "main";
     public static final String TITLE = "Deimos";

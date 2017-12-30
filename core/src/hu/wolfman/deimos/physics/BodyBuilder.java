@@ -24,26 +24,51 @@ public class BodyBuilder {
         this.fixtures = new ArrayList<>();
     }
 
+    /**
+     * A testet dinamikusra állítja.
+     * @return BodyBuilder objektum
+     */
     public BodyBuilder isDynamic() {
         bodyDef.type = BodyType.DynamicBody;
         return this;
     }
-    
+
+    /**
+     * A testet statikusra állítja.
+     * @return BodyBuilder objektum
+     */
     public BodyBuilder isStatic() {
         bodyDef.type = BodyType.StaticBody;
         return this;
     }
-    
+
+    /**
+     * A test pozícióját állítja be.
+     * @param x X-koordináta
+     * @param y Y-koordináta
+     * @return BodyBuilder objektum
+     */
     public BodyBuilder setPosition(float x, float y) {
         bodyDef.position.set(x / PPM, y / PPM);
         return this;
     }
-    
+
+    /**
+     * A paraméterként megadott fixtúradefiníció
+     * hozzáadása a BodyBuilder objektum listájához.
+     * @param fixture Fixtúra definíció
+     * @return BodyBuilder objektum
+     */
     public BodyBuilder addFixture(FixtureDef fixture) {
         fixtures.add(fixture);
         return this;
     }
-    
+
+    /**
+     * Létrehozza a testet, hozzáadja a listában
+     * tárolt fixtúradefiníciókat, és hozzáadja a világhoz.
+     * @return Box2D test
+     */
     public Body build() {
         Body body = world.createBody(bodyDef);
         for (FixtureDef fixture : fixtures) {

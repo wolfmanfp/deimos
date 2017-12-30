@@ -7,7 +7,7 @@ import com.badlogic.gdx.physics.box2d.Body;
 import hu.wolfman.deimos.Resources;
 
 /**
- *
+ * A játékost (irányítható karaktert) leíró osztály.
  * @author Farkas Péter
  */
 public class Player extends Entity {
@@ -24,7 +24,13 @@ public class Player extends Entity {
     private int points = 0;
     private int health = 100;
     private float stateTimer = 0;
-    
+
+    /**
+     * A játékos osztály konstruktora.
+     * Itt történik meg az állapot és a pozíció beállítása,
+     * a textúrarégiók inicializálása.
+     * @param body Box2D test
+     */
     public Player(Body body) {
         super(body);
         
@@ -33,20 +39,29 @@ public class Player extends Entity {
         playerStanding = Resources.get().textureRegion("player", "player_standing");
         playerJumping = Resources.get().textureRegion("player", "player_jumping");
         playerRunning = createAnimation(
-                Resources.get().textureRegion("player", "player_running"), 8, 50
+            Resources.get().textureRegion("player", "player_running"), 8, 50
         );
         
         setBounds(0, 0, 50, 50);
         setRegion(playerStanding);
-    }   
-    
+    }
+
+    /**
+     * A játékos állapotának frissítése.
+     * @param delta Két frissítés között eltelt idő (általában 1/60 s).
+     */
     @Override
     public void update(float delta) {
         setRegion(getFrame(delta));
         setPosition(getPosX() - getWidth()/ 2, getPosY() - getWidth() / 2);
     }
-    
-    private TextureRegion getFrame(float dt) {
+
+    /**
+     * A játékos sprite-ját állítja be az állapotától függően.
+     * @param delta Két frissítés között eltelt idő (általában 1/60 s).
+     * @return Textúrarégió
+     */
+    private TextureRegion getFrame(float delta) {
         currentState = getState();
         TextureRegion region;
         switch(currentState) {
@@ -72,12 +87,16 @@ public class Player extends Entity {
             facingRight = true;
         }
         
-        stateTimer = currentState == previousState ? stateTimer + dt : 0;
+        stateTimer = currentState == previousState ? stateTimer + delta : 0;
         previousState = currentState;
         
         return region;
     }
-    
+
+    /**
+     * A játékos állapotát (alaphelyzet, mozgás, ugrás, zuhanás) kéri le.
+     * @return A játékos állapota
+     */
     public State getState() {
         if (isDead) {
             return State.DEAD;
@@ -94,14 +113,23 @@ public class Player extends Entity {
         else return State.IDLE;
     }
 
+    /**
+     * A játékos balra mozgásakor hívódik meg.
+     */
     public void moveLeft() {
         body.applyLinearImpulse(new Vector2(-0.1f, 0), body.getWorldCenter(), true);
     }
-    
+
+    /**
+     * A játékos jobbra mozgásakor hívódik meg.
+      */
     public void moveRight() {
         body.applyLinearImpulse(new Vector2(0.1f, 0), body.getWorldCenter(), true);
     }
-    
+
+    /**
+     * A játékos ugrásakor hívódik meg.
+     */
     public void jump() {
         if (currentState != State.JUMPING) {
             body.applyLinearImpulse(new Vector2(0, 4f), body.getWorldCenter(), true);
@@ -109,28 +137,49 @@ public class Player extends Entity {
         }
     }
 
-    public void fire() {
-        
-    }
-
+    /**
+     * A játékos pontszámának lekérdezése.
+     * @return A játékos pontszáma
+     */
     public int getPoints() {
         return points;
     }
 
+    /**
+     * A paraméterben megadott pont hozzáadása
+     * a játékos pontszámához
+     * @param points Szerzett pontok
+     */
     public void addPoints(int points) {
         this.points += points;
     }
 
+    /**
+     * A játékos életpontját kérdezi le.
+     * @return A játékos életpontja.
+     */
     public int getHealth() {
         return health;
     }
 
+    /**
+     * A játékos életpontját növeli a
+     * paraméterben megadott számmal (maximum 100-ig).
+     * @param healthPoints
+     */
     public void addHealth(int healthPoints) {
         this.health += health;
+        if (health > 100) health = 100;
     }
-    
+
+    /**
+     * A játékos életpontszámát csökkenti
+     * a paraméterben megadott számmal.
+     * @param healthPoints
+     */
     public void damage(int healthPoints) {
         this.health -= health;
+        if (health < 0) health = 0;
     }
     
 }

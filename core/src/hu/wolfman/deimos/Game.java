@@ -16,6 +16,9 @@ public class Game extends com.badlogic.gdx.Game {
     
     public boolean debugMode = false;
 
+    /**
+     * A játék betöltése.
+     */
     @Override
     public void create() {
         batch = new SpriteBatch();
@@ -23,7 +26,11 @@ public class Game extends com.badlogic.gdx.Game {
         setScreen(new PlayScreen(this));
         Logger.log("A játék sikeresen elindult.");
     }
-    
+
+    /**
+     * A játék erőforrásainak (képek, hangok, betűtípus)
+     * betöltése.
+     */
     private void loadAssets() {
         Resources.get().setGame(MAIN_GAME);
         Resources.get().loadSound("jump", "phaserUp1.mp3");
@@ -34,13 +41,21 @@ public class Game extends com.badlogic.gdx.Game {
         Resources.get().finishLoading();
     }
 
+    /**
+     * Game loop.
+     * Frissíti a játék állapotát, és a DELTA konstans
+     * értékének megfelelően rajzolja ki a képernyőre.
+     */
     @Override
     public void render() {
         Gdx.gl20.glClear(GL20.GL_COLOR_BUFFER_BIT);
-        screen.render(STEP);
+        screen.render(DELTA);
         Resources.get().update();
     }
 
+    /**
+     * A metódus a memóriát üríti bezáráskor.
+     */
     @Override
     public void dispose() {
         super.dispose();
