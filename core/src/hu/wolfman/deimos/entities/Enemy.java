@@ -5,7 +5,7 @@ import com.badlogic.gdx.physics.box2d.Body;
 import hu.wolfman.deimos.Resources;
 
 /**
- * A játékban megjelenő ellenfél.
+ * A játékban megjelenő ellenfelet leíró osztály.
  * @author Farkas Péter
  */
 public class Enemy extends Entity {

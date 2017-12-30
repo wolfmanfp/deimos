@@ -7,7 +7,7 @@ import com.badlogic.gdx.physics.box2d.Manifold;
 import static hu.wolfman.deimos.physics.BoxConst.*;
 
 /**
- *
+ * Az objektumok ütközéseit kezelő osztály.
  * @author Farkas Péter
  */
 public class ContactListener 
