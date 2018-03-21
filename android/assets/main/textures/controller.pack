@@ -1,0 +1,34 @@
+
+controller.png
+size: 1024,256
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+button_jump
+  rotate: false
+  xy: 217, 2
+  size: 212, 213
+  orig: 212, 213
+  offset: 0, 0
+  index: -1
+button_left
+  rotate: false
+  xy: 431, 2
+  size: 212, 213
+  orig: 212, 213
+  offset: 0, 0
+  index: -1
+button_right
+  rotate: false
+  xy: 645, 2
+  size: 212, 213
+  orig: 212, 213
+  offset: 0, 0
+  index: -1
+button_shoot
+  rotate: false
+  xy: 2, 2
+  size: 213, 213
+  orig: 213, 213
+  offset: 0, 0
+  index: -1

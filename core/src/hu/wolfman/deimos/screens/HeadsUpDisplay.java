@@ -4,7 +4,6 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Label.LabelStyle;
@@ -36,23 +35,21 @@ public class HeadsUpDisplay implements Disposable {
 
         viewport = new FitViewport(WIDTH, HEIGHT, new OrthographicCamera());
         stage = new Stage(viewport, game.batch);
-        
-        createHud();
+
+        stage.addActor(createHud());
     }
 
     /**
      * Címkék létrehozása, hozzáadása a HUD-hoz.
+     * @return A HUD struktúráját leíró táblázat
      */
-    private void createHud() {
+    private Table createHud() {
+        Table table = new Table();
         LabelStyle style = new LabelStyle(
             Resources.get().bitmapFont("hudFont"),
             Color.WHITE
         );
-        
-        Table table = new Table();
-        table.top();
-        table.setFillParent(true);
-        
+
         scoreLabel = new Label("", style);
         healthLabel = new Label("", style);
         fpsLabel = new Label("", style);
@@ -61,6 +58,8 @@ public class HeadsUpDisplay implements Disposable {
         healthLabel.setFontScale(0.5f);
         fpsLabel.setFontScale(0.5f);
 
+        table.top();
+        table.setFillParent(true);
         table.add(scoreLabel).expandX().padTop(10).padLeft(5).align(Align.left);
         if (debugMode) {
             table.add(healthLabel).expandX().padTop(10).align(Align.center);
@@ -70,7 +69,7 @@ public class HeadsUpDisplay implements Disposable {
             table.add(healthLabel).expandX().padTop(10).padRight(5).align(Align.right);
         }
 
-        stage.addActor(table);
+        return table;
     }
 
     /**
@@ -87,10 +86,6 @@ public class HeadsUpDisplay implements Disposable {
             fpsLabel.setText(
                 String.format("%d fps", Gdx.graphics.getFramesPerSecond())
             );
-    }
-    
-    public Camera getCamera() {
-        return stage.getCamera();
     }
     
     public void draw() {

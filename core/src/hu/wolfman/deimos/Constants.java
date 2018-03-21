@@ -10,7 +10,9 @@ public class Constants {
     
     public static final int FPS = 60;
     public static final float DELTA = 1f / FPS;
-    
+
+    public static final float BUTTON_SIZE = 50;
+
     public static final String MAIN_GAME = "main";
     public static final String TITLE = "Deimos";
     public static final String TEST_LEVEL = "/maps/level.tmx";

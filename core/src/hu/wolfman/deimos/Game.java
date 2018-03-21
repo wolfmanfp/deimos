@@ -37,6 +37,7 @@ public class Game extends com.badlogic.gdx.Game {
         Resources.get().loadMusic("GameMusic", "Low Level Action A.mp3");
         Resources.get().loadBitmapFont("hudFont", "PressStart2P.fnt");
         Resources.get().loadTextureAtlas("player", "player.pack");
+        Resources.get().loadTextureAtlas("controller", "controller.pack");
         Resources.get().loadTexture("enemy", "enemy.png");
         Resources.get().finishLoading();
     }

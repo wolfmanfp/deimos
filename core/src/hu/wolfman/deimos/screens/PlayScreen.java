@@ -1,5 +1,6 @@
 package hu.wolfman.deimos.screens;
 
+import com.badlogic.gdx.Application;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.Screen;
@@ -17,16 +18,25 @@ import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.Array;
+
 import hu.wolfman.deimos.Game;
 import hu.wolfman.deimos.Resources;
-import hu.wolfman.deimos.entities.Player;
 import hu.wolfman.deimos.entities.Enemy;
+import hu.wolfman.deimos.entities.Player;
 import hu.wolfman.deimos.physics.BodyBuilder;
 import hu.wolfman.deimos.physics.ContactListener;
 import hu.wolfman.deimos.physics.FixtureBuilder;
 import hu.wolfman.deimos.tools.Logger;
-import static hu.wolfman.deimos.physics.BoxConst.*;
-import static hu.wolfman.deimos.Constants.*;
+
+import static hu.wolfman.deimos.Constants.HEIGHT;
+import static hu.wolfman.deimos.Constants.MAIN_GAME;
+import static hu.wolfman.deimos.Constants.TEST_LEVEL;
+import static hu.wolfman.deimos.Constants.WIDTH;
+import static hu.wolfman.deimos.physics.BoxConst.BULLET_BIT;
+import static hu.wolfman.deimos.physics.BoxConst.ENEMY_BIT;
+import static hu.wolfman.deimos.physics.BoxConst.GROUND_BIT;
+import static hu.wolfman.deimos.physics.BoxConst.PLAYER_BIT;
+import static hu.wolfman.deimos.physics.BoxConst.PPM;
 
 /**
  * A játék fő képernyője.
@@ -37,6 +47,7 @@ import static hu.wolfman.deimos.Constants.*;
 public class PlayScreen implements Screen {
     private final Game game;
     private HeadsUpDisplay hud;
+    private OnScreenController controller;
     private Music music;
     private OrthographicCamera camera;
     private OrthographicCamera debugCamera;
@@ -84,6 +95,7 @@ public class PlayScreen implements Screen {
         loadMap();
         
         hud = new HeadsUpDisplay(game, player);
+        controller = new OnScreenController(game);
         
         music = Resources.get().music("GameMusic");
         music.setLooping(true);
@@ -180,9 +192,11 @@ public class PlayScreen implements Screen {
             debugCamera.update();
             debugRenderer.render(world, debugCamera.combined);
         }
-        
-        game.batch.setProjectionMatrix(hud.getCamera().combined);
+
         hud.draw();
+
+        if (Gdx.app.getType() == Application.ApplicationType.Android)
+            controller.draw();
     }
 
     /**
@@ -205,17 +219,19 @@ public class PlayScreen implements Screen {
      */
     private void handleInput() {
         if (player.currentState != Player.State.DEAD) {
-            if (Gdx.input.isKeyJustPressed(Keys.UP)) {
+            if (Gdx.input.isKeyJustPressed(Keys.UP) || controller.isJumpPressed()) {
                 Resources.get().sound("jump").play();
                 player.jump();
             }
-            if (Gdx.input.isKeyPressed(Keys.RIGHT) && player.getVelocityX() <= 2) {
+            if ((Gdx.input.isKeyPressed(Keys.RIGHT) || controller.isRightPressed())
+                    && player.getVelocityX() <= 2) {
                 player.moveRight();
             }
-            if (Gdx.input.isKeyPressed(Keys.LEFT) && player.getVelocityY() >= -2) {
+            if ((Gdx.input.isKeyPressed(Keys.LEFT) || controller.isLeftPressed())
+                    && player.getVelocityY() >= -2) {
                 player.moveLeft();
             }
-            if (Gdx.input.isKeyJustPressed(Keys.CONTROL_LEFT)) {
+            if (Gdx.input.isKeyJustPressed(Keys.CONTROL_LEFT) || controller.isShootPressed()) {
                 //player.fire();
             }
             if (Gdx.input.isKeyJustPressed(Keys.M)) {
@@ -297,6 +313,7 @@ public class PlayScreen implements Screen {
             debugRenderer.dispose();
         }
         hud.dispose();
+        controller.dispose();
     }
 
 }
