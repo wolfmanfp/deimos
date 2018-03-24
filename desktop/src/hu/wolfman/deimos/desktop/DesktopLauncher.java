@@ -4,7 +4,7 @@ import com.badlogic.gdx.backends.lwjgl3.Lwjgl3Application;
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3ApplicationConfiguration;
 import static hu.wolfman.deimos.Constants.*;
 import hu.wolfman.deimos.Game;
-import hu.wolfman.deimos.tools.Logger;
+import hu.wolfman.deimos.utils.Logger;
 
 public class DesktopLauncher {
     public static void main (String[] args) {

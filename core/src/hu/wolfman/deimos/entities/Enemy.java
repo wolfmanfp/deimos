@@ -1,8 +1,15 @@
 package hu.wolfman.deimos.entities;
 
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.physics.box2d.Body;
+import com.badlogic.gdx.physics.box2d.World;
+
 import hu.wolfman.deimos.Resources;
+import hu.wolfman.deimos.physics.BodyBuilder;
+import hu.wolfman.deimos.physics.FixtureBuilder;
+
+import static hu.wolfman.deimos.physics.BoxConst.*;
 
 /**
  * A játékban megjelenő ellenfelet leíró osztály.
@@ -13,14 +20,28 @@ public class Enemy extends Entity {
 
     /**
      * Az ellenfél konstruktora.
-     * @param body Box2D test
+     * @param world Box2D világ
+     * @param rect Az ellenfél pozícióját leíró négyszög
      */
-    public Enemy(Body body) {
-        super(body);
+    public Enemy(World world, Rectangle rect) {
+        super(world, rect);
         enemyIdle = new TextureRegion(Resources.get().texture("enemy"));
         
         setBounds(0, 0, 30, 50);
         setRegion(enemyIdle);
+    }
+
+    @Override
+    protected Body createBody() {
+        return new BodyBuilder(world).isDynamic()
+                .setPosition(rect.getX(), rect.getY())
+                .addFixture(
+                        new FixtureBuilder()
+                                .setPolygonShape(12, 12, 0, 0)
+                                .setFilter(ENEMY_BIT, (PLAYER_BIT|GROUND_BIT|BULLET_BIT))
+                                .build()
+                )
+                .build();
     }
 
     @Override

@@ -8,7 +8,7 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.utils.Disposable;
-import hu.wolfman.deimos.tools.Logger;
+import hu.wolfman.deimos.utils.Logger;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -16,7 +16,7 @@ import java.util.Map;
  * A játék textúráit, hangjait, betűtípusait kezelő osztály.
  * @author Farkas Péter
  */
-public class Resources implements Disposable{
+public class Resources implements Disposable {
     private Map<String, String> items;
     private AssetManager manager;
     private String game;

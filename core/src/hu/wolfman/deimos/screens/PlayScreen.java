@@ -14,7 +14,6 @@ import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.Array;
@@ -26,17 +25,10 @@ import hu.wolfman.deimos.entities.Player;
 import hu.wolfman.deimos.physics.BodyBuilder;
 import hu.wolfman.deimos.physics.ContactListener;
 import hu.wolfman.deimos.physics.FixtureBuilder;
-import hu.wolfman.deimos.tools.Logger;
+import hu.wolfman.deimos.utils.Logger;
 
-import static hu.wolfman.deimos.Constants.HEIGHT;
-import static hu.wolfman.deimos.Constants.MAIN_GAME;
-import static hu.wolfman.deimos.Constants.TEST_LEVEL;
-import static hu.wolfman.deimos.Constants.WIDTH;
-import static hu.wolfman.deimos.physics.BoxConst.BULLET_BIT;
-import static hu.wolfman.deimos.physics.BoxConst.ENEMY_BIT;
-import static hu.wolfman.deimos.physics.BoxConst.GROUND_BIT;
-import static hu.wolfman.deimos.physics.BoxConst.PLAYER_BIT;
-import static hu.wolfman.deimos.physics.BoxConst.PPM;
+import static hu.wolfman.deimos.Constants.*;
+import static hu.wolfman.deimos.physics.BoxConst.*;
 
 /**
  * A játék fő képernyője.
@@ -91,7 +83,6 @@ public class PlayScreen implements Screen {
         }
         
         enemies = new Array<>();
-        definePlayer();
         loadMap();
         
         hud = new HeadsUpDisplay(game, player);
@@ -100,23 +91,6 @@ public class PlayScreen implements Screen {
         music = Resources.get().music("GameMusic");
         music.setLooping(true);
         music.play();
-    }
-
-    /**
-     * A játékos karakter létrehozása.
-     */
-    private void definePlayer() {
-        Body body = new BodyBuilder(world).isDynamic()
-                .setPosition(100, 100)
-                .addFixture(
-                        new FixtureBuilder()
-                            .setPolygonShape(20, 23, 0, 0)
-                            .setFilter(PLAYER_BIT, (GROUND_BIT|ENEMY_BIT|BULLET_BIT))
-                            .build()
-                )
-                .build();
-        player = new Player(body);
-        body.setUserData(player);
     }
 
     /**
@@ -142,21 +116,12 @@ public class PlayScreen implements Screen {
                 .build();
         }
         
-        for (MapObject object : map.getLayers().get("enemies").getObjects().getByType(RectangleMapObject.class)) {
+        for (MapObject object : map.getLayers().get("entities").getObjects().getByType(RectangleMapObject.class)) {
             Rectangle rect = ((RectangleMapObject) object).getRectangle();
+            String type = object.getProperties().get("type", String.class);
 
-            Body b = new BodyBuilder(world).isDynamic()
-                .setPosition(rect.getX(), rect.getY())
-                .addFixture(
-                        new FixtureBuilder()
-                            .setPolygonShape(12, 12, 0, 0)
-                            .setFilter(ENEMY_BIT, (PLAYER_BIT|GROUND_BIT|BULLET_BIT))
-                            .build()
-                )
-                .build();
-            Enemy e = new Enemy(b);
-            b.setUserData(e);
-            enemies.add(e);
+            if (type.equals("player") && player == null) player = new Player(world, rect);
+            if (type.equals("enemy")) enemies.add(new Enemy(world, rect));
         }
     }
     

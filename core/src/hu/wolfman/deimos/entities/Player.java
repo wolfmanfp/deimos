@@ -2,9 +2,16 @@ package hu.wolfman.deimos.entities;
 
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
+import com.badlogic.gdx.physics.box2d.World;
+
 import hu.wolfman.deimos.Resources;
+import hu.wolfman.deimos.physics.BodyBuilder;
+import hu.wolfman.deimos.physics.FixtureBuilder;
+
+import static hu.wolfman.deimos.physics.BoxConst.*;
 
 /**
  * A játékost (irányítható karaktert) leíró osztály.
@@ -29,10 +36,11 @@ public class Player extends Entity {
      * A játékos osztály konstruktora.
      * Itt történik meg az állapot és a pozíció beállítása,
      * a textúrarégiók inicializálása.
-     * @param body Box2D test
+     * @param world Box2D világ
+     * @param rect A játékos pozícióját leíró négyszög
      */
-    public Player(Body body) {
-        super(body);
+    public Player(World world, Rectangle rect) {
+        super(world, rect);
         
         currentState = previousState = State.IDLE;
         
@@ -44,6 +52,19 @@ public class Player extends Entity {
         
         setBounds(0, 0, 50, 50);
         setRegion(playerStanding);
+    }
+
+    @Override
+    protected Body createBody() {
+        return new BodyBuilder(world).isDynamic()
+                .setPosition(rect.getX(), rect.getY())
+                .addFixture(
+                        new FixtureBuilder()
+                                .setPolygonShape(20, 23, 0, 0)
+                                .setFilter(PLAYER_BIT, (GROUND_BIT|ENEMY_BIT|BULLET_BIT))
+                                .build()
+                )
+                .build();
     }
 
     /**

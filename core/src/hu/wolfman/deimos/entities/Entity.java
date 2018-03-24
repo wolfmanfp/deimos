@@ -3,7 +3,9 @@ package hu.wolfman.deimos.entities;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.physics.box2d.Body;
+import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.Array;
 import static hu.wolfman.deimos.physics.BoxConst.PPM;
 
@@ -12,11 +14,28 @@ import static hu.wolfman.deimos.physics.BoxConst.PPM;
  * @author Farkas Péter
  */
 public abstract class Entity extends Sprite {
-    public Body body;
+    protected Body body;
+    protected World world;
+    protected Rectangle rect;
 
-    public Entity(Body body) {
-        this.body = body;
+    public Entity(World world, Rectangle rect) {
+        this.world = world;
+        this.rect = rect;
+        this.body = createBody();
+        body.setUserData(this);
     }
+
+    public Entity(World world) {
+        this.world = world;
+        this.body = createBody();
+        body.setUserData(this);
+    }
+
+    /**
+     * Box2D test létrehozása az entitás számára.
+     * @return Box2D test
+     */
+    protected abstract Body createBody();
 
     /**
      * Az entitás X-koordinátájának lekérdezése.

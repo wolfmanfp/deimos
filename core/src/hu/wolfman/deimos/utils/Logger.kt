@@ -1,4 +1,4 @@
-package hu.wolfman.deimos.tools
+package hu.wolfman.deimos.utils
 
 import java.io.FileWriter
 import java.text.SimpleDateFormat
