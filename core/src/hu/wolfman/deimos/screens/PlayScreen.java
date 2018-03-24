@@ -19,7 +19,7 @@ import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.Array;
 
 import hu.wolfman.deimos.Game;
-import hu.wolfman.deimos.Resources;
+import hu.wolfman.deimos.utils.ResourceManager;
 import hu.wolfman.deimos.entities.Enemy;
 import hu.wolfman.deimos.entities.Player;
 import hu.wolfman.deimos.physics.BodyBuilder;
@@ -50,7 +50,6 @@ public class PlayScreen implements Screen {
     private Box2DDebugRenderer debugRenderer;
 
     //Tiled pálya
-    private TmxMapLoader mapLoader;
     private TiledMap map;
     private OrthogonalTiledMapRenderer mapRenderer;
 
@@ -81,27 +80,26 @@ public class PlayScreen implements Screen {
             debugCamera.setToOrtho(false, WIDTH / PPM, HEIGHT / PPM);
             debugRenderer = new Box2DDebugRenderer();
         }
-        
+
+        map = new TmxMapLoader().load(MAIN_GAME + TEST_LEVEL);
+        mapRenderer = new OrthogonalTiledMapRenderer(map, 1f / PPM);
+
         enemies = new Array<>();
-        loadMap();
+        createPlatformsAndEntities();
         
         hud = new HeadsUpDisplay(game, player);
         controller = new OnScreenController(game);
         
-        music = Resources.get().music("GameMusic");
+        music = ResourceManager.get().music("GameMusic");
         music.setLooping(true);
         music.play();
     }
 
     /**
-     * A pálya betöltése, a rajta található platformok
-     * és ellenfelek létrehozása.
+     * A pályán található platformok és entitások létrehozása
+     * a pályán definiált objektumok alapján.
      */
-    private void loadMap() {
-        mapLoader = new TmxMapLoader();
-        map = mapLoader.load(MAIN_GAME + TEST_LEVEL);
-        mapRenderer = new OrthogonalTiledMapRenderer(map, 1f / PPM);
-        
+    private void createPlatformsAndEntities() {
         for (MapObject object : map.getLayers().get("collision").getObjects().getByType(RectangleMapObject.class)) {
             Rectangle rect = ((RectangleMapObject) object).getRectangle();
 
@@ -123,10 +121,6 @@ public class PlayScreen implements Screen {
             if (type.equals("player") && player == null) player = new Player(world, rect);
             if (type.equals("enemy")) enemies.add(new Enemy(world, rect));
         }
-    }
-    
-    @Override
-    public void show() {
     }
 
     /**
@@ -185,7 +179,7 @@ public class PlayScreen implements Screen {
     private void handleInput() {
         if (player.currentState != Player.State.DEAD) {
             if (Gdx.input.isKeyJustPressed(Keys.UP) || controller.isJumpPressed()) {
-                Resources.get().sound("jump").play();
+                ResourceManager.get().sound("jump").play();
                 player.jump();
             }
             if ((Gdx.input.isKeyPressed(Keys.RIGHT) || controller.isRightPressed())
@@ -260,6 +254,10 @@ public class PlayScreen implements Screen {
 
     @Override
     public void resume() {
+    }
+
+    @Override
+    public void show() {
     }
 
     @Override

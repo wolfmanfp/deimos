@@ -1,7 +1,6 @@
 package hu.wolfman.deimos.screens;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
@@ -12,7 +11,8 @@ import com.badlogic.gdx.utils.Disposable;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import hu.wolfman.deimos.Game;
-import hu.wolfman.deimos.Resources;
+import hu.wolfman.deimos.utils.ResourceManager;
+
 import static hu.wolfman.deimos.Constants.*;
 
 /**
@@ -111,7 +111,7 @@ public class OnScreenController implements Disposable {
      * @return A kontrolleren elhelyezendő kép.
      */
     private Image createButton(String textureRegion) {
-        Image image = new Image(Resources.get().textureRegion("controller", textureRegion));
+        Image image = new Image(ResourceManager.get().textureRegion("controller", textureRegion));
         image.setSize(BUTTON_SIZE, BUTTON_SIZE);
         return image;
     }

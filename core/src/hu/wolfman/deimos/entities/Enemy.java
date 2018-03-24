@@ -5,7 +5,7 @@ import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.World;
 
-import hu.wolfman.deimos.Resources;
+import hu.wolfman.deimos.utils.ResourceManager;
 import hu.wolfman.deimos.physics.BodyBuilder;
 import hu.wolfman.deimos.physics.FixtureBuilder;
 
@@ -25,7 +25,7 @@ public class Enemy extends Entity {
      */
     public Enemy(World world, Rectangle rect) {
         super(world, rect);
-        enemyIdle = new TextureRegion(Resources.get().texture("enemy"));
+        enemyIdle = new TextureRegion(ResourceManager.get().texture("enemy"));
         
         setBounds(0, 0, 30, 50);
         setRegion(enemyIdle);

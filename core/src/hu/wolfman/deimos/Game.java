@@ -5,6 +5,8 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import hu.wolfman.deimos.screens.PlayScreen;
 import hu.wolfman.deimos.utils.Logger;
+import hu.wolfman.deimos.utils.ResourceManager;
+
 import static hu.wolfman.deimos.Constants.*;
 
 /**
@@ -32,14 +34,14 @@ public class Game extends com.badlogic.gdx.Game {
      * betöltése.
      */
     private void loadAssets() {
-        Resources.get().setGame(MAIN_GAME);
-        Resources.get().loadSound("jump", "phaserUp1.mp3");
-        Resources.get().loadMusic("GameMusic", "Low Level Action A.mp3");
-        Resources.get().loadBitmapFont("hudFont", "PressStart2P.fnt");
-        Resources.get().loadTextureAtlas("player", "player.pack");
-        Resources.get().loadTextureAtlas("controller", "controller.pack");
-        Resources.get().loadTexture("enemy", "enemy.png");
-        Resources.get().finishLoading();
+        ResourceManager.get().setGame(MAIN_GAME);
+        ResourceManager.get().loadSound("jump", "phaserUp1.mp3");
+        ResourceManager.get().loadMusic("GameMusic", "Low Level Action A.mp3");
+        ResourceManager.get().loadBitmapFont("hudFont", "PressStart2P.fnt");
+        ResourceManager.get().loadTextureAtlas("player", "player.pack");
+        ResourceManager.get().loadTextureAtlas("controller", "controller.pack");
+        ResourceManager.get().loadTexture("enemy", "enemy.png");
+        ResourceManager.get().finishLoading();
     }
 
     /**
@@ -51,7 +53,7 @@ public class Game extends com.badlogic.gdx.Game {
     public void render() {
         Gdx.gl20.glClear(GL20.GL_COLOR_BUFFER_BIT);
         screen.render(DELTA);
-        Resources.get().update();
+        ResourceManager.get().update();
     }
 
     /**
@@ -61,7 +63,7 @@ public class Game extends com.badlogic.gdx.Game {
     public void dispose() {
         super.dispose();
         batch.dispose();
-        Resources.get().dispose();
+        ResourceManager.get().dispose();
     }
     
     @Override

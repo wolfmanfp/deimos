@@ -7,7 +7,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.World;
 
-import hu.wolfman.deimos.Resources;
+import hu.wolfman.deimos.utils.ResourceManager;
 import hu.wolfman.deimos.physics.BodyBuilder;
 import hu.wolfman.deimos.physics.FixtureBuilder;
 
@@ -44,10 +44,10 @@ public class Player extends Entity {
         
         currentState = previousState = State.IDLE;
         
-        playerStanding = Resources.get().textureRegion("player", "player_standing");
-        playerJumping = Resources.get().textureRegion("player", "player_jumping");
+        playerStanding = ResourceManager.get().textureRegion("player", "player_standing");
+        playerJumping = ResourceManager.get().textureRegion("player", "player_jumping");
         playerRunning = createAnimation(
-            Resources.get().textureRegion("player", "player_running"), 8, 50
+            ResourceManager.get().textureRegion("player", "player_running"), 8, 50
         );
         
         setBounds(0, 0, 50, 50);

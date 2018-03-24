@@ -1,7 +1,6 @@
 package hu.wolfman.deimos.screens;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.scenes.scene2d.Stage;
@@ -13,7 +12,7 @@ import com.badlogic.gdx.utils.Disposable;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import hu.wolfman.deimos.Game;
-import hu.wolfman.deimos.Resources;
+import hu.wolfman.deimos.utils.ResourceManager;
 import hu.wolfman.deimos.entities.Player;
 import static hu.wolfman.deimos.Constants.*;
 
@@ -46,7 +45,7 @@ public class HeadsUpDisplay implements Disposable {
     private Table createHud() {
         Table table = new Table();
         LabelStyle style = new LabelStyle(
-            Resources.get().bitmapFont("hudFont"),
+            ResourceManager.get().bitmapFont("hudFont"),
             Color.WHITE
         );
 
