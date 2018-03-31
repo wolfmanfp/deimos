@@ -7,6 +7,7 @@ import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.Array;
+
 import static hu.wolfman.deimos.physics.BoxConst.PPM;
 
 /**
@@ -17,18 +18,20 @@ public abstract class Entity extends Sprite {
     protected Body body;
     protected World world;
     protected Rectangle rect;
+    protected TextureRegion baseTexture;
+    protected float width, height;
 
-    public Entity(World world, Rectangle rect) {
+    public Entity(World world, TextureRegion baseTexture) {
         this.world = world;
-        this.rect = rect;
-        this.body = createBody();
-        body.setUserData(this);
+        this.baseTexture = baseTexture;
+        this.width = baseTexture.getRegionWidth();
+        this.height = baseTexture.getRegionHeight();
+        setBounds(0, 0, width, height);
     }
 
-    public Entity(World world) {
-        this.world = world;
-        this.body = createBody();
-        body.setUserData(this);
+    public Entity(World world, TextureRegion baseTexture, Rectangle rect) {
+        this(world, baseTexture);
+        this.rect = rect;
     }
 
     /**

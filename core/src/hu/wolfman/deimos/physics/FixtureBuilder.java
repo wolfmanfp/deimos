@@ -1,10 +1,10 @@
 package hu.wolfman.deimos.physics;
 
-import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.CircleShape;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.Shape;
+
 import static hu.wolfman.deimos.physics.BoxConst.PPM;
 
 /**
@@ -33,15 +33,13 @@ public class FixtureBuilder {
 
     /**
      * A fixtúra alakját téglalap formájúra állítja be.
-     * @param x Szélesség fele
-     * @param y Hosszúság fele
-     * @param cx Középpont X-koordináta
-     * @param cy Középpont Y-koordináta
+     * @param width Szélesség
+     * @param height Hosszúság
      * @return FixtureBuilder objektum
      */
-    public FixtureBuilder setPolygonShape(float x, float y, float cx, float cy) {
+    public FixtureBuilder setBoxShape(float width, float height) {
         shape = new PolygonShape();
-        ((PolygonShape) shape).setAsBox(x / PPM, y / PPM, new Vector2(cx / PPM, cy / PPM), 0);
+        ((PolygonShape) shape).setAsBox(width / 2 / PPM, height / 2 / PPM);
         fixtureDef.shape = shape;
         return this;
     }
@@ -74,6 +72,5 @@ public class FixtureBuilder {
     public FixtureDef build() {
         return fixtureDef;
     }
-    
-    
+
 }

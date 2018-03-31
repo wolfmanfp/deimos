@@ -5,8 +5,10 @@ import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.World;
-import java.util.ArrayList;
-import java.util.List;
+
+import java.util.HashMap;
+import java.util.Map;
+
 import static hu.wolfman.deimos.physics.BoxConst.PPM;
 
 /**
@@ -16,12 +18,12 @@ import static hu.wolfman.deimos.physics.BoxConst.PPM;
 public class BodyBuilder {
     private final World world;
     private final BodyDef bodyDef;
-    private final List<FixtureDef> fixtures;
+    private Map<FixtureDef, Object> fixtures;
 
     public BodyBuilder(World world) {
         this.world = world;
         this.bodyDef = new BodyDef();
-        this.fixtures = new ArrayList<>();
+        this.fixtures = new HashMap<>();
     }
 
     /**
@@ -60,7 +62,19 @@ public class BodyBuilder {
      * @return BodyBuilder objektum
      */
     public BodyBuilder addFixture(FixtureDef fixture) {
-        fixtures.add(fixture);
+        fixtures.put(fixture, null);
+        return this;
+    }
+
+    /**
+     * A paraméterként megadott fixtúradefiníció
+     * hozzáadása a BodyBuilder objektum listájához.
+     * @param fixture Fixtúra definíció
+     * @param userData Fixtúrához tartozó adat
+     * @return BodyBuilder objektum
+     */
+    public BodyBuilder addFixture(FixtureDef fixture, Object userData) {
+        fixtures.put(fixture, userData);
         return this;
     }
 
@@ -71,9 +85,9 @@ public class BodyBuilder {
      */
     public Body build() {
         Body body = world.createBody(bodyDef);
-        for (FixtureDef fixture : fixtures) {
-            body.createFixture(fixture);
-        }
+        fixtures.forEach((fixtureDef, userData) ->
+                body.createFixture(fixtureDef).setUserData(userData)
+        );
         return body;
     }
     

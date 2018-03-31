@@ -5,7 +5,6 @@ import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.World;
 
-import hu.wolfman.deimos.utils.ResourceManager;
 import hu.wolfman.deimos.physics.BodyBuilder;
 import hu.wolfman.deimos.physics.FixtureBuilder;
 
@@ -21,14 +20,15 @@ public class Enemy extends Entity {
     /**
      * Az ellenfél konstruktora.
      * @param world Box2D világ
+     * @param baseTexture Az ellenfél kezdő textúrája.
      * @param rect Az ellenfél pozícióját leíró négyszög
      */
-    public Enemy(World world, Rectangle rect) {
-        super(world, rect);
-        enemyIdle = new TextureRegion(ResourceManager.get().texture("enemy"));
-        
-        setBounds(0, 0, 30, 50);
+    public Enemy(World world, TextureRegion baseTexture, Rectangle rect) {
+        super(world, baseTexture, rect);
+        enemyIdle = baseTexture;
         setRegion(enemyIdle);
+
+        this.body = createBody();
     }
 
     @Override
@@ -37,16 +37,17 @@ public class Enemy extends Entity {
                 .setPosition(rect.getX(), rect.getY())
                 .addFixture(
                         new FixtureBuilder()
-                                .setPolygonShape(12, 12, 0, 0)
-                                .setFilter(ENEMY_BIT, (PLAYER_BIT|GROUND_BIT|BULLET_BIT))
-                                .build()
+                                .setBoxShape(width, height)
+                                .setFilter(ENEMY_BIT, (PLAYER_BIT | PLATFORM_BIT | BULLET_BIT))
+                                .build(),
+                        this
                 )
                 .build();
     }
 
     @Override
     public void update(float delta) {
-        setPosition(getPosX() - getWidth()/ 2, getPosY() - getWidth() / 2);
+        setPosition(getPosX() - getWidth() / 2, getPosY() - getHeight() / 2);
     }
     
 }

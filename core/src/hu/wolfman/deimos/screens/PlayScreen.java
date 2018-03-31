@@ -6,6 +6,7 @@ import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.maps.MapObject;
 import com.badlogic.gdx.maps.objects.RectangleMapObject;
 import com.badlogic.gdx.maps.tiled.TiledMap;
@@ -19,13 +20,13 @@ import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.Array;
 
 import hu.wolfman.deimos.Game;
-import hu.wolfman.deimos.utils.ResourceManager;
 import hu.wolfman.deimos.entities.Enemy;
 import hu.wolfman.deimos.entities.Player;
 import hu.wolfman.deimos.physics.BodyBuilder;
 import hu.wolfman.deimos.physics.ContactListener;
 import hu.wolfman.deimos.physics.FixtureBuilder;
 import hu.wolfman.deimos.utils.Logger;
+import hu.wolfman.deimos.utils.ResourceManager;
 
 import static hu.wolfman.deimos.Constants.*;
 import static hu.wolfman.deimos.physics.BoxConst.*;
@@ -56,7 +57,7 @@ public class PlayScreen implements Screen {
     //Entitások
     private Player player;
     private Array<Enemy> enemies;
-    
+
     private boolean musicIsMuted = false;
     private boolean debug = false;
 
@@ -107,19 +108,22 @@ public class PlayScreen implements Screen {
                 .setPosition(rect.getX() + rect.getWidth() / 2, rect.getY() + rect.getHeight() / 2)
                 .addFixture(
                         new FixtureBuilder()
-                            .setPolygonShape(rect.getWidth() / 2, rect.getHeight() / 2, 0, 0)
-                            .setFilter(GROUND_BIT, (PLAYER_BIT|ENEMY_BIT|BULLET_BIT))
+                            .setBoxShape(rect.getWidth(), rect.getHeight())
+                            .setFilter(PLATFORM_BIT, (PLAYER_BIT|ENEMY_BIT|BULLET_BIT))
                             .build()
                 )
                 .build();
         }
-        
+
+        TextureRegion playerTexture = ResourceManager.get().textureRegion("player", "player_standing");
+        TextureRegion enemyTexture = new TextureRegion(ResourceManager.get().texture("enemy"));
+
         for (MapObject object : map.getLayers().get("entities").getObjects().getByType(RectangleMapObject.class)) {
             Rectangle rect = ((RectangleMapObject) object).getRectangle();
             String type = object.getProperties().get("type", String.class);
 
-            if (type.equals("player") && player == null) player = new Player(world, rect);
-            if (type.equals("enemy")) enemies.add(new Enemy(world, rect));
+            if (type.equals("player") && player == null) player = new Player(world, playerTexture, rect);
+            if (type.equals("enemy")) enemies.add(new Enemy(world, enemyTexture, rect));
         }
     }
 
@@ -140,9 +144,7 @@ public class PlayScreen implements Screen {
         
         game.batch.begin();
         player.draw(game.batch);
-        for (Enemy enemy : enemies) {
-            enemy.draw(game.batch);
-        }
+        enemies.forEach(enemy -> enemy.draw(game.batch));
         game.batch.end();
 
         if (debug) {
@@ -166,9 +168,7 @@ public class PlayScreen implements Screen {
         handleInput();
         world.step(delta, 6, 2);
         player.update(delta);
-        for (Enemy enemy : enemies) {
-            enemy.update(delta);
-        }
+        enemies.forEach(enemy -> enemy.update(delta));
         hud.update();
     }
 
@@ -179,7 +179,7 @@ public class PlayScreen implements Screen {
     private void handleInput() {
         if (player.currentState != Player.State.DEAD) {
             if (Gdx.input.isKeyJustPressed(Keys.UP) || controller.isJumpPressed()) {
-                ResourceManager.get().sound("jump").play();
+
                 player.jump();
             }
             if ((Gdx.input.isKeyPressed(Keys.RIGHT) || controller.isRightPressed())
@@ -191,7 +191,7 @@ public class PlayScreen implements Screen {
                 player.moveLeft();
             }
             if (Gdx.input.isKeyJustPressed(Keys.CONTROL_LEFT) || controller.isShootPressed()) {
-                //player.fire();
+                player.fire();
             }
             if (Gdx.input.isKeyJustPressed(Keys.M)) {
                 if (!musicIsMuted) {

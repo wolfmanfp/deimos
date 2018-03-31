@@ -4,6 +4,10 @@ import com.badlogic.gdx.physics.box2d.Contact;
 import com.badlogic.gdx.physics.box2d.ContactImpulse;
 import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.Manifold;
+
+import hu.wolfman.deimos.entities.Bullet;
+import hu.wolfman.deimos.entities.Player;
+
 import static hu.wolfman.deimos.physics.BoxConst.*;
 
 /**
@@ -15,7 +19,7 @@ public class ContactListener
 
     /**
      * A metódus megadja, mi történjen két objektum ütközésekor.
-     * @param contact Az ütköző fixtúrákat magába foglaló objektum.
+     * @param contact Az ütköző fixtúrákat magába foglaló objektum
      */
     @Override
     public void beginContact(Contact contact) {
@@ -25,20 +29,45 @@ public class ContactListener
         int collisionDefinition = fixA.getFilterData().categoryBits | fixB.getFilterData().categoryBits;
         
         switch(collisionDefinition) {
-            case PLAYER_BIT | ENEMY_BIT:
-                break;
             case BULLET_BIT | ENEMY_BIT:
+                Bullet bullet =
+                        fixA.getFilterData().categoryBits == BULLET_BIT ?
+                                (Bullet)(fixA.getUserData()) :
+                                (Bullet)(fixB.getUserData());
+                bullet.setToRemove();
                 break;
-            case BULLET_BIT | PLAYER_BIT:
+            case ENEMY_BULLET_BIT | PLAYER_BIT:
                 break;
-            case BULLET_BIT | GROUND_BIT:
+            case BULLET_BIT | PLATFORM_BIT:
+                if (fixA.getFilterData().categoryBits == BULLET_BIT) {
+                    ((Bullet)fixA.getUserData()).setToRemove();
+                } else ((Bullet)fixB.getUserData()).setToRemove();
                 break;
         }
     }
 
+    /**
+     * A metódus megadja, mi történjen két objektum ütközése után.
+     * @param contact Az ütköző fixtúrákat magába foglaló objektum
+     */
     @Override
     public void endContact(Contact contact) {
+        Fixture fixA = contact.getFixtureA();
+        Fixture fixB = contact.getFixtureB();
 
+        int collisionDefinition = fixA.getFilterData().categoryBits | fixB.getFilterData().categoryBits;
+
+        switch(collisionDefinition) {
+            case BULLET_BIT | ENEMY_BIT:
+                Bullet bullet =
+                        fixA.getFilterData().categoryBits == BULLET_BIT ?
+                                (Bullet) (fixA.getUserData()) :
+                                (Bullet) (fixB.getUserData());
+                ((Player) bullet.getOwner()).addPoints(100);
+                break;
+            case ENEMY_BULLET_BIT | PLAYER_BIT:
+                break;
+        }
     }
 
     @Override
