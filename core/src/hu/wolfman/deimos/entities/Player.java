@@ -15,7 +15,7 @@ import hu.wolfman.deimos.physics.BodyBuilder;
 import hu.wolfman.deimos.physics.FixtureBuilder;
 import hu.wolfman.deimos.utils.ResourceManager;
 
-import static hu.wolfman.deimos.physics.BoxConst.*;
+import static hu.wolfman.deimos.physics.B2DConst.*;
 
 /**
  * A játékost (irányítható karaktert) leíró osztály.

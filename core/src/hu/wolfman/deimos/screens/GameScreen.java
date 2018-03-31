@@ -29,7 +29,7 @@ import hu.wolfman.deimos.utils.Logger;
 import hu.wolfman.deimos.utils.ResourceManager;
 
 import static hu.wolfman.deimos.Constants.*;
-import static hu.wolfman.deimos.physics.BoxConst.*;
+import static hu.wolfman.deimos.physics.B2DConst.*;
 
 /**
  * A játék fő képernyője.
@@ -37,10 +37,10 @@ import static hu.wolfman.deimos.physics.BoxConst.*;
  * meg a pálya, a játékos és az ellenfelek.
  * @author Farkas Péter
  */
-public class PlayScreen implements Screen {
+public class GameScreen implements Screen {
     private final Game game;
-    private HeadsUpDisplay hud;
-    private OnScreenController controller;
+    private hu.wolfman.deimos.hud.HeadsUpDisplay hud;
+    private hu.wolfman.deimos.hud.OnScreenController controller;
     private Music music;
     private OrthographicCamera camera;
     private OrthographicCamera debugCamera;
@@ -66,7 +66,7 @@ public class PlayScreen implements Screen {
      * a HUD, a pálya és a játékos inicializálása.
      * @param game A játék fő osztályának objektuma.
      */
-    public PlayScreen(Game game) {
+    public GameScreen(Game game) {
         this.game = game;
         
         world = new World(new Vector2(0, -9.81f), true);
@@ -88,8 +88,8 @@ public class PlayScreen implements Screen {
         enemies = new Array<>();
         createPlatformsAndEntities();
         
-        hud = new HeadsUpDisplay(game, player);
-        controller = new OnScreenController(game);
+        hud = new hu.wolfman.deimos.hud.HeadsUpDisplay(game, player);
+        controller = new hu.wolfman.deimos.hud.OnScreenController(game);
         
         music = ResourceManager.get().music("GameMusic");
         music.setLooping(true);

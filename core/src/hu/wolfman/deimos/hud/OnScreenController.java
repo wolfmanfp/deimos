@@ -1,4 +1,4 @@
-package hu.wolfman.deimos.screens;
+package hu.wolfman.deimos.hud;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.OrthographicCamera;

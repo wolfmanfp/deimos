@@ -9,7 +9,7 @@ import com.badlogic.gdx.physics.box2d.World;
 import java.util.HashMap;
 import java.util.Map;
 
-import static hu.wolfman.deimos.physics.BoxConst.PPM;
+import static hu.wolfman.deimos.physics.B2DConst.PPM;
 
 /**
  * Box2D testeket létrehozó osztály.

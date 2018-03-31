@@ -8,7 +8,7 @@ import com.badlogic.gdx.physics.box2d.Manifold;
 import hu.wolfman.deimos.entities.Bullet;
 import hu.wolfman.deimos.entities.Player;
 
-import static hu.wolfman.deimos.physics.BoxConst.*;
+import static hu.wolfman.deimos.physics.B2DConst.*;
 
 /**
  * Az objektumok ütközéseit kezelő osztály.

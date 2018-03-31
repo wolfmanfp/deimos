@@ -8,7 +8,7 @@ import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.Array;
 
-import static hu.wolfman.deimos.physics.BoxConst.PPM;
+import static hu.wolfman.deimos.physics.B2DConst.PPM;
 
 /**
  * A játék entitásait leíró absztrakt osztály.

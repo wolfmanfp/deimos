@@ -7,7 +7,7 @@ import com.badlogic.gdx.physics.box2d.World;
 import hu.wolfman.deimos.physics.BodyBuilder;
 import hu.wolfman.deimos.physics.FixtureBuilder;
 
-import static hu.wolfman.deimos.physics.BoxConst.*;
+import static hu.wolfman.deimos.physics.B2DConst.*;
 
 /**
  * Egy töltényt definiáló osztály.
