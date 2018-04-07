@@ -21,6 +21,13 @@ android {
         applicationId "hu.wolfman.deimos"
         minSdkVersion 24
         targetSdkVersion 27
+        jackOptions {
+            enabled true
+        }
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
     }
 }
 

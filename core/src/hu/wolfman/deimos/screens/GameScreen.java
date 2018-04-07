@@ -1,10 +1,9 @@
 package hu.wolfman.deimos.screens;
 
-import com.badlogic.gdx.Application;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input.Keys;
+import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.Screen;
-import com.badlogic.gdx.audio.Music;
+import com.badlogic.gdx.controllers.Controllers;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.maps.MapObject;
@@ -22,12 +21,17 @@ import com.badlogic.gdx.utils.Array;
 import hu.wolfman.deimos.Game;
 import hu.wolfman.deimos.entities.Enemy;
 import hu.wolfman.deimos.entities.Player;
+import hu.wolfman.deimos.hud.HeadsUpDisplay;
+import hu.wolfman.deimos.hud.TouchController;
+import hu.wolfman.deimos.input.ControllerInputListener;
+import hu.wolfman.deimos.input.KeyboardInputListener;
 import hu.wolfman.deimos.physics.BodyBuilder;
 import hu.wolfman.deimos.physics.ContactListener;
 import hu.wolfman.deimos.physics.FixtureBuilder;
-import hu.wolfman.deimos.utils.Logger;
+import hu.wolfman.deimos.utils.MusicManager;
 import hu.wolfman.deimos.utils.ResourceManager;
 
+import static com.badlogic.gdx.Application.ApplicationType.Android;
 import static hu.wolfman.deimos.Constants.*;
 import static hu.wolfman.deimos.physics.B2DConst.*;
 
@@ -39,11 +43,11 @@ import static hu.wolfman.deimos.physics.B2DConst.*;
  */
 public class GameScreen implements Screen {
     private final Game game;
-    private hu.wolfman.deimos.hud.HeadsUpDisplay hud;
-    private hu.wolfman.deimos.hud.OnScreenController controller;
-    private Music music;
+    private HeadsUpDisplay hud;
+    private TouchController touchController;
     private OrthographicCamera camera;
     private OrthographicCamera debugCamera;
+    private InputMultiplexer multiplexer;
 
     //Box2D
     private World world;
@@ -88,12 +92,16 @@ public class GameScreen implements Screen {
         enemies = new Array<>();
         createPlatformsAndEntities();
         
-        hud = new hu.wolfman.deimos.hud.HeadsUpDisplay(game, player);
-        controller = new hu.wolfman.deimos.hud.OnScreenController(game);
-        
-        music = ResourceManager.get().music("GameMusic");
-        music.setLooping(true);
-        music.play();
+        hud = new HeadsUpDisplay(game, player);
+        touchController = new TouchController(game, player);
+
+        multiplexer = new InputMultiplexer();
+        multiplexer.addProcessor(touchController.getStage());
+        multiplexer.addProcessor(new KeyboardInputListener(player, this));
+        Gdx.input.setInputProcessor(multiplexer);
+        Controllers.addListener(new ControllerInputListener(player));
+
+        MusicManager.get().play("GameMusic");
     }
 
     /**
@@ -155,9 +163,7 @@ public class GameScreen implements Screen {
         }
 
         hud.draw();
-
-        if (Gdx.app.getType() == Application.ApplicationType.Android)
-            controller.draw();
+        if (Gdx.app.getType() == Android) touchController.draw();
     }
 
     /**
@@ -165,65 +171,14 @@ public class GameScreen implements Screen {
      * @param delta Két frissítés között eltelt idő (általában 1/60 s).
      */
     private void update(float delta) {
-        handleInput();
         world.step(delta, 6, 2);
         player.update(delta);
         enemies.forEach(enemy -> enemy.update(delta));
         hud.update();
     }
 
-    /**
-     * Meghatározza, hogy megadott billentyű lenyomása
-     * esetén mi történjen.
-     */
-    private void handleInput() {
-        if (player.currentState != Player.State.DEAD) {
-            if (Gdx.input.isKeyJustPressed(Keys.UP) || controller.isJumpPressed()) {
-
-                player.jump();
-            }
-            if ((Gdx.input.isKeyPressed(Keys.RIGHT) || controller.isRightPressed())
-                    && player.getVelocityX() <= 2) {
-                player.moveRight();
-            }
-            if ((Gdx.input.isKeyPressed(Keys.LEFT) || controller.isLeftPressed())
-                    && player.getVelocityY() >= -2) {
-                player.moveLeft();
-            }
-            if (Gdx.input.isKeyJustPressed(Keys.CONTROL_LEFT) || controller.isShootPressed()) {
-                player.fire();
-            }
-            if (Gdx.input.isKeyJustPressed(Keys.M)) {
-                if (!musicIsMuted) {
-                    music.setVolume(0.0f);
-                    musicIsMuted = true;
-                }
-                else {
-                    music.setVolume(1.0f);
-                    musicIsMuted = false;
-                }
-            }
-            if (Gdx.input.isKeyJustPressed(Keys.PLUS)) {
-                float currentVolume = music.getVolume();
-                if (currentVolume < 1.0f) {
-                    music.setVolume(currentVolume + 0.1f);
-                }
-            }
-            if (Gdx.input.isKeyJustPressed(Keys.MINUS)) {
-                float currentVolume = music.getVolume();
-                if (currentVolume > 0.0f) {
-                    music.setVolume(currentVolume - 0.1f);
-                }
-                else music.setVolume(0.0f);
-            }
-            if (game.debugMode && Gdx.input.isKeyJustPressed(Keys.D)) {
-                debug = !debug;
-            }
-        }
-        if (Gdx.input.isKeyPressed(Keys.ESCAPE)) {
-            Logger.log("Kilépés a játékból");
-            Gdx.app.exit();
-        }
+    public void toggleDebugRenderer() {
+        if (game.debugMode) debug = !debug;
     }
 
     /**
@@ -276,7 +231,7 @@ public class GameScreen implements Screen {
             debugRenderer.dispose();
         }
         hud.dispose();
-        controller.dispose();
+        touchController.dispose();
     }
 
 }

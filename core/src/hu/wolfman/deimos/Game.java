@@ -3,6 +3,7 @@ package hu.wolfman.deimos;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+
 import hu.wolfman.deimos.screens.GameScreen;
 import hu.wolfman.deimos.utils.Logger;
 import hu.wolfman.deimos.utils.ResourceManager;
@@ -15,8 +16,7 @@ import static hu.wolfman.deimos.Constants.*;
  */
 public class Game extends com.badlogic.gdx.Game {
     public SpriteBatch batch;
-    
-    public boolean debugMode = false;
+    public boolean debugMode;
 
     /**
      * A játék betöltése.
@@ -24,6 +24,8 @@ public class Game extends com.badlogic.gdx.Game {
     @Override
     public void create() {
         batch = new SpriteBatch();
+        debugMode = false;
+
         loadAssets();
         setScreen(new GameScreen(this));
         Logger.log("A játék sikeresen elindult.");

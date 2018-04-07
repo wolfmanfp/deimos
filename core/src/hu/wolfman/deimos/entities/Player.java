@@ -34,6 +34,8 @@ public class Player extends Entity {
     
     private boolean isDead = false;
     private boolean facingRight = true;
+    private boolean isMovingLeft = false;
+    private boolean isMovingRight = false;
     private int points = 0;
     private int health = 100;
     private float stateTimer = 0;
@@ -87,6 +89,10 @@ public class Player extends Entity {
             if (bullet.isRemovable()) bullets.remove(bullet);
             else bullet.update(delta);
         });
+
+        if (isMovingLeft) moveLeft();
+        if (isMovingRight) moveRight();
+
         setRegion(getFrame(delta));
         setPosition(getPosX() - getWidth()/ 2, getPosY() - getHeight() / 2);
     }
@@ -157,13 +163,21 @@ public class Player extends Entity {
     /**
      * A játékos balra mozgásakor hívódik meg.
      */
-    public void moveLeft() {
-        body.applyLinearImpulse(new Vector2(-0.1f, 0), body.getWorldCenter(), true);
+    public void setMovingLeft(boolean movingLeft) {
+        if (!isDead) isMovingLeft = movingLeft;
     }
 
     /**
      * A játékos jobbra mozgásakor hívódik meg.
-      */
+     */
+    public void setMovingRight(boolean movingRight) {
+        if (!isDead) isMovingRight = movingRight;
+    }
+
+    public void moveLeft() {
+        body.applyLinearImpulse(new Vector2(-0.1f, 0), body.getWorldCenter(), true);
+    }
+
     public void moveRight() {
         body.applyLinearImpulse(new Vector2(0.1f, 0), body.getWorldCenter(), true);
     }
@@ -172,7 +186,7 @@ public class Player extends Entity {
      * A játékos ugrásakor hívódik meg.
      */
     public void jump() {
-        if (currentState != State.JUMPING) {
+        if (currentState != State.JUMPING && currentState != State.FALLING && !isDead ) {
             ResourceManager.get().sound("jump").play();
             body.applyLinearImpulse(new Vector2(0, 5f), body.getWorldCenter(), true);
             currentState = State.JUMPING;
@@ -184,16 +198,18 @@ public class Player extends Entity {
      * a töltények listájához.
      */
     public void fire() {
-        ResourceManager.get().sound("shoot").play();
-        bullets.add(new Bullet(
-                world,
-                new TextureRegion(ResourceManager.get().texture("bullet")),
-                facingRight ? getX() * PPM + width - 5 : getX() * PPM + 5,
-                getY() * PPM + 30,
-                facingRight,
-                false,
-                this
-        ));
+        if (!isDead) {
+            ResourceManager.get().sound("shoot").play();
+            bullets.add(new Bullet(
+                    world,
+                    new TextureRegion(ResourceManager.get().texture("bullet")),
+                    facingRight ? getX() * PPM + width - 5 : getX() * PPM + 5,
+                    getY() * PPM + 30,
+                    facingRight,
+                    false,
+                    this
+            ));
+        }
     }
 
     /**
