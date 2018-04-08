@@ -15,246 +15,260 @@ import hu.wolfman.deimos.physics.BodyBuilder;
 import hu.wolfman.deimos.physics.FixtureBuilder;
 import hu.wolfman.deimos.utils.ResourceManager;
 
-import static hu.wolfman.deimos.physics.B2DConst.*;
+import static hu.wolfman.deimos.Constants.*;
 
 /**
  * A játékost (irányítható karaktert) leíró osztály.
+ *
  * @author Farkas Péter
  */
 public class Player extends Entity {
-    public enum State {IDLE, DEAD, RUNNING, JUMPING, FALLING}
-    public State previousState;
-    public State currentState;
-    
-    private final TextureRegion playerStanding;
-    private final TextureRegion playerJumping;
-    private final Animation playerRunning;
+  public enum State { IDLE, DEAD, RUNNING, JUMPING, FALLING }
 
-    private List<Bullet> bullets;
-    
-    private boolean isDead = false;
-    private boolean facingRight = true;
-    private boolean isMovingLeft = false;
-    private boolean isMovingRight = false;
-    private int points = 0;
-    private int health = 100;
-    private float stateTimer = 0;
+  public State previousState = State.IDLE;
+  public State currentState = State.IDLE;
 
-    /**
-     * A játékos osztály konstruktora.
-     * Itt történik meg az állapot és a pozíció beállítása,
-     * a textúrarégiók inicializálása.
-     * @param world Box2D világ
-     * @param baseTexture A játékos kezdő textúrája
-     * @param rect A játékos pozícióját leíró négyszög
-     */
-    public Player(World world, TextureRegion baseTexture, Rectangle rect) {
-        super(world, baseTexture, rect);
-        bullets = new CopyOnWriteArrayList<>();
+  private final TextureRegion playerStanding;
+  private final TextureRegion playerJumping;
+  private final Animation playerRunning;
 
-        currentState = previousState = State.IDLE;
-        
-        playerStanding = this.baseTexture;
-        playerJumping = ResourceManager.get().textureRegion("player", "player_jumping");
-        playerRunning = createAnimation(
-            ResourceManager.get().textureRegion("player", "player_running"), 8, 50
-        );
+  private List<Bullet> bullets;
 
-        setRegion(playerStanding);
+  private boolean isDead = false;
+  private boolean facingRight = true;
+  private boolean isMovingLeft = false;
+  private boolean isMovingRight = false;
+  private int points = 0;
+  private int health = 100;
+  private float stateTimer = 0;
 
-        this.body = createBody();
+  /**
+   * Az osztály konstruktora.
+   *
+   * @param world       Box2D világ
+   * @param baseTexture A játékos kezdő textúrája
+   * @param rect        A játékos pozícióját leíró négyszög
+   */
+  public Player(World world, TextureRegion baseTexture, Rectangle rect) {
+    super(world, baseTexture, rect);
+    bullets = new CopyOnWriteArrayList<>();
+
+    playerStanding = this.baseTexture;
+    playerJumping = ResourceManager.get().textureRegion("player", "player_jumping");
+    playerRunning = createAnimation(
+        ResourceManager.get().textureRegion("player", "player_running"), 8, 50
+    );
+
+    setRegion(playerStanding);
+    body = createBody();
+  }
+
+  @Override
+  protected Body createBody() {
+    return new BodyBuilder(world).isDynamic()
+        .setPosition(rect.getX(), rect.getY())
+        .addFixture(
+            new FixtureBuilder()
+                .setBoxShape(width, height)
+                .setFilter(PLAYER_BIT, PLATFORM_BIT | ENEMY_BIT | BULLET_BIT)
+                .build(),
+            this
+        )
+        .build();
+  }
+
+  /**
+   * A játékos állapotának frissítése.
+   *
+   * @param delta Két frissítés között eltelt idő (általában 1/60 s).
+   */
+  @Override
+  public void update(float delta) {
+    bullets.forEach(bullet -> {
+      if (bullet.isRemovable()) {
+        bullets.remove(bullet);
+      } else {
+        bullet.update(delta);
+      }
+    });
+
+    if (isMovingLeft) moveLeft();
+    if (isMovingRight) moveRight();
+
+    setRegion(getFrame(delta));
+    setPosition(getPosX() - getWidth() / 2, getPosY() - getHeight() / 2);
+  }
+
+  @Override
+  public void draw(Batch batch) {
+    bullets.forEach(bullet -> bullet.draw(batch));
+    super.draw(batch);
+  }
+
+  /**
+   * A játékos sprite-ját állítja be az állapotától függően.
+   *
+   * @param delta Két frissítés között eltelt idő (általában 1/60 s).
+   * @return Textúrarégió
+   */
+  private TextureRegion getFrame(float delta) {
+    currentState = getState();
+    TextureRegion region;
+    switch (currentState) {
+      case JUMPING:
+        region = playerJumping;
+        break;
+      case RUNNING:
+        region = (TextureRegion) playerRunning.getKeyFrame(stateTimer, true);
+        break;
+      case FALLING:
+      case IDLE:
+      default:
+        region = playerStanding;
+        break;
     }
 
-    @Override
-    protected Body createBody() {
-        return new BodyBuilder(world).isDynamic()
-                .setPosition(rect.getX(), rect.getY())
-                .addFixture(
-                        new FixtureBuilder()
-                                .setBoxShape(width, height)
-                                .setFilter(PLAYER_BIT, (PLATFORM_BIT |ENEMY_BIT|BULLET_BIT))
-                                .build(),
-                        this
-                )
-                .build();
+    if ((getVelocityX() < 0 || !facingRight) && !region.isFlipX()) {
+      region.flip(true, false);
+      facingRight = false;
+    } else if ((getVelocityX() > 0 || facingRight) && region.isFlipX()) {
+      region.flip(true, false);
+      facingRight = true;
     }
 
-    /**
-     * A játékos állapotának frissítése.
-     * @param delta Két frissítés között eltelt idő (általában 1/60 s).
-     */
-    @Override
-    public void update(float delta) {
-        bullets.forEach(bullet -> {
-            if (bullet.isRemovable()) bullets.remove(bullet);
-            else bullet.update(delta);
-        });
+    stateTimer = currentState == previousState ? stateTimer + delta : 0;
+    previousState = currentState;
 
-        if (isMovingLeft) moveLeft();
-        if (isMovingRight) moveRight();
+    return region;
+  }
 
-        setRegion(getFrame(delta));
-        setPosition(getPosX() - getWidth()/ 2, getPosY() - getHeight() / 2);
+  /**
+   * A játékos állapotát (alaphelyzet, mozgás, ugrás, zuhanás) kéri le.
+   *
+   * @return A játékos állapota
+   */
+  public State getState() {
+    if (isDead) {
+      return State.DEAD;
+    } else if (getVelocityY() > 0) {
+      return State.JUMPING;
+    } else if (getVelocityY() < 0) {
+      return State.FALLING;
+    } else if (getVelocityX() != 0) {
+      return State.RUNNING;
+    } else {
+      return State.IDLE;
     }
+  }
 
-    @Override
-    public void draw(Batch batch) {
-        bullets.forEach(bullet -> bullet.draw(batch));
-        super.draw(batch);
+  /**
+   * A játékos balra mozgásakor hívódik meg.
+   */
+  public void setMovingLeft(boolean movingLeft) {
+    if (!isDead) {
+      isMovingLeft = movingLeft;
     }
+  }
 
-    /**
-     * A játékos sprite-ját állítja be az állapotától függően.
-     * @param delta Két frissítés között eltelt idő (általában 1/60 s).
-     * @return Textúrarégió
-     */
-    private TextureRegion getFrame(float delta) {
-        currentState = getState();
-        TextureRegion region;
-        switch(currentState) {
-            case JUMPING:
-                region = playerJumping;
-                break;
-            case RUNNING:
-                region = (TextureRegion) playerRunning.getKeyFrame(stateTimer, true);
-                break;
-            case FALLING:
-            case IDLE:
-            default:
-                region = playerStanding;
-                break;
-        }
-        
-        if ((getVelocityX() < 0 || !facingRight) && !region.isFlipX()) {
-            region.flip(true, false);
-            facingRight = false;
-        }
-        else if ((getVelocityX() > 0 || facingRight) && region.isFlipX()) {
-            region.flip(true, false);
-            facingRight = true;
-        }
-        
-        stateTimer = currentState == previousState ? stateTimer + delta : 0;
-        previousState = currentState;
-        
-        return region;
+  /**
+   * A játékos jobbra mozgásakor hívódik meg.
+   */
+  public void setMovingRight(boolean movingRight) {
+    if (!isDead) {
+      isMovingRight = movingRight;
     }
+  }
 
-    /**
-     * A játékos állapotát (alaphelyzet, mozgás, ugrás, zuhanás) kéri le.
-     * @return A játékos állapota
-     */
-    public State getState() {
-        if (isDead) {
-            return State.DEAD;
-        }
-        else if (getVelocityY() > 0) {
-            return State.JUMPING;
-        }
-        else if (getVelocityY() < 0) {
-            return State.FALLING;
-        }
-        else if (getVelocityX() != 0) {
-            return State.RUNNING;
-        }
-        else return State.IDLE;
-    }
+  public void moveLeft() {
+    body.applyLinearImpulse(new Vector2(-0.1f, 0), body.getWorldCenter(), true);
+  }
 
-    /**
-     * A játékos balra mozgásakor hívódik meg.
-     */
-    public void setMovingLeft(boolean movingLeft) {
-        if (!isDead) isMovingLeft = movingLeft;
-    }
+  public void moveRight() {
+    body.applyLinearImpulse(new Vector2(0.1f, 0), body.getWorldCenter(), true);
+  }
 
-    /**
-     * A játékos jobbra mozgásakor hívódik meg.
-     */
-    public void setMovingRight(boolean movingRight) {
-        if (!isDead) isMovingRight = movingRight;
+  /**
+   * A játékos ugrásakor hívódik meg.
+   */
+  public void jump() {
+    if (currentState != State.JUMPING && currentState != State.FALLING && !isDead) {
+      ResourceManager.get().sound("jump").play();
+      body.applyLinearImpulse(new Vector2(0, 5f), body.getWorldCenter(), true);
+      currentState = State.JUMPING;
     }
+  }
 
-    public void moveLeft() {
-        body.applyLinearImpulse(new Vector2(-0.1f, 0), body.getWorldCenter(), true);
+  /**
+   * Lövéskor hívódik meg, hozzáad egy új töltényt
+   * a töltények listájához.
+   */
+  public void fire() {
+    if (!isDead) {
+      ResourceManager.get().sound("shoot").play();
+      bullets.add(new Bullet(
+          world,
+          new TextureRegion(ResourceManager.get().texture("bullet")),
+          facingRight ? getX() * PPM + width - 5 : getX() * PPM + 5,
+          getY() * PPM + 30,
+          facingRight,
+          false,
+          this
+      ));
     }
+  }
 
-    public void moveRight() {
-        body.applyLinearImpulse(new Vector2(0.1f, 0), body.getWorldCenter(), true);
-    }
+  /**
+   * A játékos pontszámának lekérdezése.
+   *
+   * @return A játékos pontszáma
+   */
+  public int getPoints() {
+    return points;
+  }
 
-    /**
-     * A játékos ugrásakor hívódik meg.
-     */
-    public void jump() {
-        if (currentState != State.JUMPING && currentState != State.FALLING && !isDead ) {
-            ResourceManager.get().sound("jump").play();
-            body.applyLinearImpulse(new Vector2(0, 5f), body.getWorldCenter(), true);
-            currentState = State.JUMPING;
-        }
-    }
+  /**
+   * A paraméterben megadott pont hozzáadása
+   * a játékos pontszámához
+   *
+   * @param points Szerzett pontok
+   */
+  public void addPoints(int points) {
+    this.points += points;
+  }
 
-    /**
-     * Lövéskor hívódik meg, hozzáad egy új töltényt
-     * a töltények listájához.
-     */
-    public void fire() {
-        if (!isDead) {
-            ResourceManager.get().sound("shoot").play();
-            bullets.add(new Bullet(
-                    world,
-                    new TextureRegion(ResourceManager.get().texture("bullet")),
-                    facingRight ? getX() * PPM + width - 5 : getX() * PPM + 5,
-                    getY() * PPM + 30,
-                    facingRight,
-                    false,
-                    this
-            ));
-        }
-    }
+  /**
+   * A játékos életpontját kérdezi le.
+   *
+   * @return A játékos életpontja.
+   */
+  public int getHealth() {
+    return health;
+  }
 
-    /**
-     * A játékos pontszámának lekérdezése.
-     * @return A játékos pontszáma
-     */
-    public int getPoints() {
-        return points;
+  /**
+   * A játékos életpontját növeli a
+   * paraméterben megadott számmal (maximum 100-ig).
+   *
+   * @param healthPoints Életpontszám
+   */
+  public void addHealth(int healthPoints) {
+    this.health += health;
+    if (health > 100) {
+      health = 100;
     }
+  }
 
-    /**
-     * A paraméterben megadott pont hozzáadása
-     * a játékos pontszámához
-     * @param points Szerzett pontok
-     */
-    public void addPoints(int points) {
-        this.points += points;
+  /**
+   * A játékos életpontszámát csökkenti
+   * a paraméterben megadott számmal.
+   *
+   * @param healthPoints Életpontszám
+   */
+  public void damage(int healthPoints) {
+    this.health -= health;
+    if (health < 0) {
+      health = 0;
     }
+  }
 
-    /**
-     * A játékos életpontját kérdezi le.
-     * @return A játékos életpontja.
-     */
-    public int getHealth() {
-        return health;
-    }
-
-    /**
-     * A játékos életpontját növeli a
-     * paraméterben megadott számmal (maximum 100-ig).
-     * @param healthPoints
-     */
-    public void addHealth(int healthPoints) {
-        this.health += health;
-        if (health > 100) health = 100;
-    }
-
-    /**
-     * A játékos életpontszámát csökkenti
-     * a paraméterben megadott számmal.
-     * @param healthPoints
-     */
-    public void damage(int healthPoints) {
-        this.health -= health;
-        if (health < 0) health = 0;
-    }
-    
 }

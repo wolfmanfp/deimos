@@ -16,4 +16,15 @@ public class Constants {
     public static final String MAIN_GAME = "main";
     public static final String TITLE = "Deimos";
     public static final String TEST_LEVEL = "/maps/level.tmx";
+
+    // Fizikához kapcsolódó konstansok
+    // Pixel/méter
+    public static final int PPM = 100;
+
+    // Ütközési bitek
+    public static final short PLATFORM_BIT = 1;
+    public static final short PLAYER_BIT = 2;
+    public static final short ENEMY_BIT = 4;
+    public static final short BULLET_BIT = 8;
+    public static final short ENEMY_BULLET_BIT = 16;
 }
