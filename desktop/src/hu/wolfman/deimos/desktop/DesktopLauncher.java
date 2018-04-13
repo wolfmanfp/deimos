@@ -17,6 +17,7 @@ public class DesktopLauncher {
     config.setTitle(TITLE);
     config.setWindowedMode(WIDTH * 2, HEIGHT * 2);
     config.setWindowIcon("icon.png");
+    config.setResizable(false);
 
     Game game = new Game();
     if (args.length != 0 && args[0].equals("-debug")) {

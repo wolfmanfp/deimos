@@ -54,14 +54,14 @@ public class HeadsUpDisplay implements Disposable {
    * @return A HUD struktúráját leíró táblázat
    */
   private Table createHud() {
-    LabelStyle style = new LabelStyle(
+    LabelStyle font = new LabelStyle(
         ResourceManager.get().bitmapFont("hudFont"),
         Color.WHITE
     );
 
-    scoreLabel = new Label("", style);
-    healthLabel = new Label("", style);
-    fpsLabel = new Label("", style);
+    scoreLabel = new Label("", font);
+    healthLabel = new Label("", font);
+    fpsLabel = new Label("", font);
 
     scoreLabel.setFontScale(0.5f);
     healthLabel.setFontScale(0.5f);

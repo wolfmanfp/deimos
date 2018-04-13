@@ -1,11 +1,12 @@
 package hu.wolfman.deimos.physics;
 
-import com.badlogic.gdx.physics.box2d.Contact;
 import com.badlogic.gdx.physics.box2d.ContactImpulse;
+import com.badlogic.gdx.physics.box2d.Contact;
 import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.Manifold;
 
 import hu.wolfman.deimos.entities.Bullet;
+import hu.wolfman.deimos.entities.Enemy;
 import hu.wolfman.deimos.entities.Player;
 
 import static hu.wolfman.deimos.Constants.*;
@@ -17,6 +18,9 @@ import static hu.wolfman.deimos.Constants.*;
  */
 public class ContactListener
     implements com.badlogic.gdx.physics.box2d.ContactListener {
+  private Bullet bullet;
+  private Player player;
+  private Enemy enemy;
 
   /**
    * A metódus megadja, mi történjen két objektum ütközésekor.
@@ -32,20 +36,26 @@ public class ContactListener
 
     switch (collisionDefinition) {
       case BULLET_BIT | ENEMY_BIT:
-        Bullet bullet =
-            fixA.getFilterData().categoryBits == BULLET_BIT ?
-                (Bullet) (fixA.getUserData()) :
-                (Bullet) (fixB.getUserData());
+      case BULLET_BIT | PLATFORM_BIT:
+      case ENEMY_BULLET_BIT | PLAYER_BIT:
+      case ENEMY_BULLET_BIT | PLATFORM_BIT:
+        if (fixA.getFilterData().categoryBits == BULLET_BIT
+            || fixA.getFilterData().categoryBits == ENEMY_BULLET_BIT) {
+          bullet = (Bullet) fixA.getUserData();
+        } else {
+          bullet = (Bullet) fixB.getUserData();
+        }
+
         bullet.setToRemove();
         break;
-      case ENEMY_BULLET_BIT | PLAYER_BIT:
-        break;
-      case BULLET_BIT | PLATFORM_BIT:
-        if (fixA.getFilterData().categoryBits == BULLET_BIT) {
-          ((Bullet) fixA.getUserData()).setToRemove();
+      case PLAYER_BIT | LEVEL_END_BIT:
+        if (fixA.getFilterData().categoryBits == PLAYER_BIT) {
+          player = (Player) fixA.getUserData();
         } else {
-          ((Bullet) fixB.getUserData()).setToRemove();
+          player = (Player) fixB.getUserData();
         }
+
+        player.setHasReachedEndOfLevel(true);
         break;
       default:
         break;
@@ -66,13 +76,26 @@ public class ContactListener
 
     switch (collisionDefinition) {
       case BULLET_BIT | ENEMY_BIT:
-        Bullet bullet =
-            fixA.getFilterData().categoryBits == BULLET_BIT ?
-                (Bullet) (fixA.getUserData()) :
-                (Bullet) (fixB.getUserData());
-        ((Player) bullet.getOwner()).addPoints(100);
+        if (fixA.getFilterData().categoryBits == BULLET_BIT) {
+          bullet = (Bullet) fixA.getUserData();
+          enemy = (Enemy) fixB.getUserData();
+        } else {
+          bullet = (Bullet) fixB.getUserData();
+          enemy = (Enemy) fixA.getUserData();
+        }
+
+        player = (Player) bullet.getOwner();
+        player.addPoints(PLAYER_POINTS);
+        enemy.damage(ENEMY_DAMAGE);
         break;
       case ENEMY_BULLET_BIT | PLAYER_BIT:
+        if (fixA.getFilterData().categoryBits == PLAYER_BIT) {
+          player = (Player) fixA.getUserData();
+        } else {
+          player = (Player) fixB.getUserData();
+        }
+
+        player.damage(PLAYER_DAMAGE);
         break;
       default:
         break;
@@ -80,13 +103,9 @@ public class ContactListener
   }
 
   @Override
-  public void preSolve(Contact contact, Manifold oldManifold) {
-
-  }
+  public void preSolve(Contact contact, Manifold oldManifold) {}
 
   @Override
-  public void postSolve(Contact contact, ContactImpulse impulse) {
-
-  }
+  public void postSolve(Contact contact, ContactImpulse impulse) {}
 
 }

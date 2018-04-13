@@ -34,12 +34,13 @@ public class Player extends Entity {
 
   private List<Bullet> bullets;
 
+  private int points = 0;
+  private int health = PLAYER_HEALTH;
   private boolean isDead = false;
   private boolean facingRight = true;
   private boolean isMovingLeft = false;
   private boolean isMovingRight = false;
-  private int points = 0;
-  private int health = 100;
+  private boolean hasReachedEndOfLevel = false;
   private float stateTimer = 0;
 
   /**
@@ -70,7 +71,7 @@ public class Player extends Entity {
         .addFixture(
             new FixtureBuilder()
                 .setBoxShape(width, height)
-                .setFilter(PLAYER_BIT, PLATFORM_BIT | ENEMY_BIT | BULLET_BIT)
+                .setFilter(PLAYER_BIT, PLATFORM_BIT | LEVEL_END_BIT | ENEMY_BIT | ENEMY_BULLET_BIT)
                 .build(),
             this
         )
@@ -86,14 +87,22 @@ public class Player extends Entity {
   public void update(float delta) {
     bullets.forEach(bullet -> {
       if (bullet.isRemovable()) {
+        bullet.destroyBody();
         bullets.remove(bullet);
       } else {
         bullet.update(delta);
       }
     });
 
-    if (isMovingLeft) moveLeft();
-    if (isMovingRight) moveRight();
+    if (isMovingLeft) {
+      moveLeft();
+    }
+    if (isMovingRight) {
+      moveRight();
+    }
+    if (isDead) {
+      body.setLinearVelocity(0, -5f);
+    }
 
     setRegion(getFrame(delta));
     setPosition(getPosX() - getWidth() / 2, getPosY() - getHeight() / 2);
@@ -103,6 +112,25 @@ public class Player extends Entity {
   public void draw(Batch batch) {
     bullets.forEach(bullet -> bullet.draw(batch));
     super.draw(batch);
+  }
+
+  /**
+   * A játékos állapotát (alaphelyzet, mozgás, ugrás, zuhanás) kéri le.
+   *
+   * @return A játékos állapota
+   */
+  public State getState() {
+    if (isDead) {
+      return State.DEAD;
+    } else if (getVelocityY() > 0) {
+      return State.JUMPING;
+    } else if (getVelocityY() < 0) {
+      return State.FALLING;
+    } else if (getVelocityX() != 0) {
+      return State.RUNNING;
+    } else {
+      return State.IDLE;
+    }
   }
 
   /**
@@ -143,51 +171,6 @@ public class Player extends Entity {
   }
 
   /**
-   * A játékos állapotát (alaphelyzet, mozgás, ugrás, zuhanás) kéri le.
-   *
-   * @return A játékos állapota
-   */
-  public State getState() {
-    if (isDead) {
-      return State.DEAD;
-    } else if (getVelocityY() > 0) {
-      return State.JUMPING;
-    } else if (getVelocityY() < 0) {
-      return State.FALLING;
-    } else if (getVelocityX() != 0) {
-      return State.RUNNING;
-    } else {
-      return State.IDLE;
-    }
-  }
-
-  /**
-   * A játékos balra mozgásakor hívódik meg.
-   */
-  public void setMovingLeft(boolean movingLeft) {
-    if (!isDead) {
-      isMovingLeft = movingLeft;
-    }
-  }
-
-  /**
-   * A játékos jobbra mozgásakor hívódik meg.
-   */
-  public void setMovingRight(boolean movingRight) {
-    if (!isDead) {
-      isMovingRight = movingRight;
-    }
-  }
-
-  public void moveLeft() {
-    body.applyLinearImpulse(new Vector2(-0.1f, 0), body.getWorldCenter(), true);
-  }
-
-  public void moveRight() {
-    body.applyLinearImpulse(new Vector2(0.1f, 0), body.getWorldCenter(), true);
-  }
-
-  /**
    * A játékos ugrásakor hívódik meg.
    */
   public void jump() {
@@ -218,17 +201,47 @@ public class Player extends Entity {
   }
 
   /**
-   * A játékos pontszámának lekérdezése.
-   *
-   * @return A játékos pontszáma
+   * A játékos balra mozgásakor hívódik meg.
    */
-  public int getPoints() {
-    return points;
+  public void setMovingLeft(boolean movingLeft) {
+    if (!isDead) {
+      isMovingLeft = movingLeft;
+    }
+  }
+
+  public void moveLeft() {
+    body.applyLinearImpulse(new Vector2(-0.1f, 0), body.getWorldCenter(), true);
+  }
+
+  /**
+   * A játékos jobbra mozgásakor hívódik meg.
+   */
+  public void setMovingRight(boolean movingRight) {
+    if (!isDead) {
+      isMovingRight = movingRight;
+    }
+  }
+
+  public void moveRight() {
+    body.applyLinearImpulse(new Vector2(0.1f, 0), body.getWorldCenter(), true);
+  }
+
+  /**
+   * A játékos életpontszámát csökkenti
+   * a paraméterben megadott számmal.
+   *
+   * @param healthPoints Életszázalék
+   */
+  public void damage(int healthPoints) {
+    health -= healthPoints;
+    if (health == 0) {
+      isDead = true;
+    }
   }
 
   /**
    * A paraméterben megadott pont hozzáadása
-   * a játékos pontszámához
+   * a játékos pontszámához.
    *
    * @param points Szerzett pontok
    */
@@ -236,39 +249,23 @@ public class Player extends Entity {
     this.points += points;
   }
 
-  /**
-   * A játékos életpontját kérdezi le.
-   *
-   * @return A játékos életpontja.
-   */
   public int getHealth() {
     return health;
   }
 
-  /**
-   * A játékos életpontját növeli a
-   * paraméterben megadott számmal (maximum 100-ig).
-   *
-   * @param healthPoints Életpontszám
-   */
-  public void addHealth(int healthPoints) {
-    this.health += health;
-    if (health > 100) {
-      health = 100;
-    }
+  public int getPoints() {
+    return points;
   }
 
-  /**
-   * A játékos életpontszámát csökkenti
-   * a paraméterben megadott számmal.
-   *
-   * @param healthPoints Életpontszám
-   */
-  public void damage(int healthPoints) {
-    this.health -= health;
-    if (health < 0) {
-      health = 0;
-    }
+  public float getStateTimer() {
+    return stateTimer;
   }
 
+  public boolean hasReachedEndOfLevel() {
+    return hasReachedEndOfLevel;
+  }
+
+  public void setHasReachedEndOfLevel(boolean hasReachedEndOfLevel) {
+    this.hasReachedEndOfLevel = hasReachedEndOfLevel;
+  }
 }

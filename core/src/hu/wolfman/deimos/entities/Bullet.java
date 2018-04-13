@@ -17,7 +17,6 @@ import static hu.wolfman.deimos.Constants.*;
 public class Bullet extends Entity {
   private boolean removeFlag = false;
   private boolean isEnemy;
-  private boolean isFlyingRight;
   private Object owner;
 
   /**
@@ -34,7 +33,6 @@ public class Bullet extends Entity {
   public Bullet(World world, TextureRegion baseTexture,
                 float x, float y, boolean isFlyingRight, boolean isEnemy, Object owner) {
     super(world, baseTexture);
-    this.isFlyingRight = isFlyingRight;
     this.isEnemy = isEnemy;
     this.owner = owner;
 
@@ -51,7 +49,7 @@ public class Bullet extends Entity {
         .setPosition(getX(), getY())
         .addFixture(
             new FixtureBuilder()
-                .setCircleShape(3)
+                .setBoxShape(width, height)
                 .setFilter(
                     isEnemy ? ENEMY_BULLET_BIT : BULLET_BIT,
                     isEnemy ? PLATFORM_BIT | PLAYER_BIT : PLATFORM_BIT | ENEMY_BIT)
@@ -64,6 +62,13 @@ public class Bullet extends Entity {
   @Override
   public void update(float delta) {
     setPosition(getPosX() - getWidth() / 2, getPosY() - getHeight() / 2);
+  }
+
+  /**
+   * Box2D test törlése.
+   */
+  public void destroyBody() {
+    world.destroyBody(body);
   }
 
   /**

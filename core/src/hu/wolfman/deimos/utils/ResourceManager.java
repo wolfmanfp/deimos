@@ -8,6 +8,7 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.utils.Disposable;
+import com.badlogic.gdx.utils.I18NBundle;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -194,6 +195,32 @@ public class ResourceManager implements Disposable {
    */
   public Texture texture(String id) {
     return manager.get(items.get(id), Texture.class);
+  }
+
+  /**
+   * Nyelvi csomag betöltése a játék megfelelő könyvtárából.
+   *
+   * @param id Azonosító, amivel hivatkozunk betöltésnél a nyelvi csomagra.
+   */
+  public void loadLanguageBundle(String id) {
+    String path = game + "/lang/" + id;
+    try {
+      manager.load(path, I18NBundle.class);
+      items.put(id, path);
+    } catch (Exception e) {
+      Logger.log(path + " nem található!");
+    }
+  }
+
+  /**
+   * Egy lokalizált szöveg megkeresése.
+   *
+   * @param id  A nyelvi csomag azonosítója.
+   * @param key A lokalizált szöveg azonosítója.
+   * @return Lokalizált szöveg
+   */
+  public String localeString(String id, String key) {
+    return manager.get(items.get(id), I18NBundle.class).get(key);
   }
 
   @Override

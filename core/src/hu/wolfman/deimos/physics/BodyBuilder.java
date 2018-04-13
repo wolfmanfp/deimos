@@ -4,6 +4,7 @@ import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
+import com.badlogic.gdx.physics.box2d.MassData;
 import com.badlogic.gdx.physics.box2d.World;
 
 import java.util.HashMap;
@@ -20,6 +21,7 @@ public class BodyBuilder {
   private final World world;
   private final BodyDef bodyDef;
   private Map<FixtureDef, Object> fixtures;
+  private MassData massData;
 
   /**
    * Az osztály konstruktora.
@@ -90,6 +92,18 @@ public class BodyBuilder {
   }
 
   /**
+   * Megadja a test tömegét.
+   *
+   * @param mass Tömeg (kg)
+   * @return BodyBuilder objektum
+   */
+  public BodyBuilder setMass(float mass) {
+    massData = new MassData();
+    massData.mass = mass;
+    return this;
+  }
+
+  /**
    * Létrehozza a testet, hozzáadja a listában
    * tárolt fixtúradefiníciókat, és hozzáadja a világhoz.
    *
@@ -100,6 +114,9 @@ public class BodyBuilder {
     fixtures.forEach((fixtureDef, userData) ->
         body.createFixture(fixtureDef).setUserData(userData)
     );
+    if (massData != null) {
+      body.setMassData(massData);
+    }
     return body;
   }
 

@@ -21,6 +21,7 @@ import com.badlogic.gdx.utils.Array;
 import hu.wolfman.deimos.Game;
 import hu.wolfman.deimos.entities.Enemy;
 import hu.wolfman.deimos.entities.Player;
+import hu.wolfman.deimos.entities.Player.State;
 import hu.wolfman.deimos.hud.HeadsUpDisplay;
 import hu.wolfman.deimos.hud.TouchController;
 import hu.wolfman.deimos.input.ControllerInputListener;
@@ -31,7 +32,6 @@ import hu.wolfman.deimos.physics.FixtureBuilder;
 import hu.wolfman.deimos.utils.MusicManager;
 import hu.wolfman.deimos.utils.ResourceManager;
 
-import static com.badlogic.gdx.Application.ApplicationType.Android;
 import static hu.wolfman.deimos.Constants.*;
 
 /**
@@ -44,21 +44,23 @@ import static hu.wolfman.deimos.Constants.*;
 public class GameScreen implements Screen {
   private final Game game;
   private HeadsUpDisplay hud;
-  private TouchController touchController;
   private OrthographicCamera camera;
   private OrthographicCamera debugCamera;
+
+  // Input
+  private TouchController touchController;
   private InputMultiplexer multiplexer;
 
-  //Box2D
+  // Box2D
   private World world;
   private ContactListener contactListener;
   private Box2DDebugRenderer debugRenderer;
 
-  //Tiled pálya
+  // Tiled pálya
   private TiledMap map;
   private OrthogonalTiledMapRenderer mapRenderer;
 
-  //Entitások
+  // Entitások
   private Player player;
   private Array<Enemy> enemies;
 
@@ -117,17 +119,17 @@ public class GameScreen implements Screen {
           .addFixture(
               new FixtureBuilder()
                   .setBoxShape(rect.getWidth(), rect.getHeight())
-                  .setFilter(PLATFORM_BIT, (PLAYER_BIT | ENEMY_BIT | BULLET_BIT))
+                  .setFilter(PLATFORM_BIT, PLAYER_BIT | ENEMY_BIT | BULLET_BIT | ENEMY_BULLET_BIT)
                   .build()
           )
           .build();
     }
 
     TextureRegion playerTexture = ResourceManager.get().textureRegion("player", "player_standing");
-    TextureRegion enemyTexture = new TextureRegion(ResourceManager.get().texture("enemy"));
+    TextureRegion enemyTexture = ResourceManager.get().textureRegion("enemy", "enemy_idle");
 
     for (MapObject object :
-        map.getLayers().get("entities").getObjects().getByType(RectangleMapObject.class)) {
+        map.getLayers().get("objects").getObjects().getByType(RectangleMapObject.class)) {
       Rectangle rect = ((RectangleMapObject) object).getRectangle();
       String type = object.getProperties().get("type", String.class);
 
@@ -136,6 +138,17 @@ public class GameScreen implements Screen {
       }
       if (type.equals("enemy")) {
         enemies.add(new Enemy(world, enemyTexture, rect));
+      }
+      if (type.equals("levelEnd")) {
+        new BodyBuilder(world).isStatic()
+            .setPosition(rect.getX() + rect.getWidth() / 2, rect.getY() + rect.getHeight() / 2)
+            .addFixture(
+                new FixtureBuilder()
+                    .setBoxShape(rect.getWidth(), rect.getHeight())
+                    .setFilter(LEVEL_END_BIT, PLAYER_BIT | ENEMY_BIT | BULLET_BIT | ENEMY_BULLET_BIT)
+                    .build()
+            )
+            .build();
       }
     }
   }
@@ -157,8 +170,8 @@ public class GameScreen implements Screen {
     mapRenderer.render();
 
     game.batch.begin();
-    player.draw(game.batch);
     enemies.forEach(enemy -> enemy.draw(game.batch));
+    player.draw(game.batch);
     game.batch.end();
 
     if (debug) {
@@ -169,9 +182,11 @@ public class GameScreen implements Screen {
     }
 
     hud.draw();
-    if (Gdx.app.getType() == Android) {
+    if (game.isRunningOnPhone()) {
       touchController.draw();
     }
+
+    checkState();
   }
 
   /**
@@ -184,6 +199,40 @@ public class GameScreen implements Screen {
     player.update(delta);
     enemies.forEach(enemy -> enemy.update(delta));
     hud.update();
+  }
+
+  /**
+   * Ellenőrzi, hogy a játékos nyert-e vagy vesztett,
+   * és megadja, hogy mi történjen ezekben az esetekben.
+   */
+  private void checkState() {
+    if (player.currentState == State.DEAD && player.getStateTimer() > 1) {
+      MusicManager.get().stop();
+      Controllers.clearListeners();
+      dispose();
+      game.setScreen(
+          new EndScreen(game, ResourceManager.get().localeString("game", "youDied"))
+      );
+    }
+
+    boolean enemiesAreDead = true;
+    for (Enemy enemy: enemies) {
+      if (!enemy.isDead()) {
+        enemiesAreDead = false;
+        break;
+      }
+    }
+
+    if (player.hasReachedEndOfLevel() && enemiesAreDead) {
+      MusicManager.get().stop();
+      Controllers.clearListeners();
+      dispose();
+      game.setScreen(
+          new EndScreen(game, ResourceManager.get().localeString("game", "youWin"))
+      );
+    } else {
+      player.setHasReachedEndOfLevel(false);
+    }
   }
 
   /**
@@ -214,26 +263,6 @@ public class GameScreen implements Screen {
     }
   }
 
-  @Override
-  public void resize(int width, int height) {
-  }
-
-  @Override
-  public void pause() {
-  }
-
-  @Override
-  public void resume() {
-  }
-
-  @Override
-  public void show() {
-  }
-
-  @Override
-  public void hide() {
-  }
-
   /**
    * A metódus a memóriát üríti bezáráskor.
    */
@@ -248,5 +277,20 @@ public class GameScreen implements Screen {
     hud.dispose();
     touchController.dispose();
   }
+
+  @Override
+  public void resize(int width, int height) {}
+
+  @Override
+  public void pause() {}
+
+  @Override
+  public void resume() {}
+
+  @Override
+  public void show() {}
+
+  @Override
+  public void hide() {}
 
 }

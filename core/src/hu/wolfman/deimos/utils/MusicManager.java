@@ -9,8 +9,7 @@ public class MusicManager {
   private Music music;
   private static MusicManager INSTANCE;
 
-  private MusicManager() {
-  }
+  private MusicManager() {}
 
   /**
    * Az osztály statikus példányát visszaadó metódus.
