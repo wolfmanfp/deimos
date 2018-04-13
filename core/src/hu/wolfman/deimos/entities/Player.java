@@ -13,6 +13,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
 
 import hu.wolfman.deimos.physics.BodyBuilder;
 import hu.wolfman.deimos.physics.FixtureBuilder;
+import hu.wolfman.deimos.utils.Logger;
 import hu.wolfman.deimos.utils.ResourceManager;
 
 import static hu.wolfman.deimos.Constants.*;
@@ -233,9 +234,11 @@ public class Player extends Entity {
    * @param healthPoints Életszázalék
    */
   public void damage(int healthPoints) {
+    Logger.log(String.format("%d%%-ot sérültél!", healthPoints));
     health -= healthPoints;
     if (health == 0) {
       isDead = true;
+      Logger.log("Meghaltál!");
     }
   }
 
@@ -247,6 +250,7 @@ public class Player extends Entity {
    */
   public void addPoints(int points) {
     this.points += points;
+    Logger.log(String.format("Szereztél %d pontot!", points));
   }
 
   public int getHealth() {

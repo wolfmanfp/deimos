@@ -13,7 +13,14 @@ import hu.wolfman.deimos.physics.BodyBuilder;
 import hu.wolfman.deimos.physics.FixtureBuilder;
 import hu.wolfman.deimos.utils.ResourceManager;
 
-import static hu.wolfman.deimos.Constants.*;
+import static hu.wolfman.deimos.Constants.ATTACK_DELAY;
+import static hu.wolfman.deimos.Constants.BULLET_BIT;
+import static hu.wolfman.deimos.Constants.ENEMY_BIT;
+import static hu.wolfman.deimos.Constants.ENEMY_HEALTH;
+import static hu.wolfman.deimos.Constants.ENEMY_MASS;
+import static hu.wolfman.deimos.Constants.PLATFORM_BIT;
+import static hu.wolfman.deimos.Constants.PLAYER_BIT;
+import static hu.wolfman.deimos.Constants.PPM;
 
 /**
  * A játékban megjelenő ellenfelet leíró osztály.

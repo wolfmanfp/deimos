@@ -22,7 +22,7 @@ public class ControllerInputListener extends ControllerAdapter {
 
   @Override
   public void connected(Controller controller) {
-    Logger.log(String.format("%d csatlakoztatva", controller.getName()));
+    Logger.log(String.format("%s csatlakoztatva", controller.getName()));
   }
 
   /**

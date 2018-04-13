@@ -20,16 +20,19 @@ import static hu.wolfman.deimos.Constants.MAIN_GAME;
  */
 public class Game extends com.badlogic.gdx.Game {
   public SpriteBatch batch;
-  private boolean debugMode = true;
+  private boolean debugMode = false;
 
   /**
    * A játék betöltése.
    */
   @Override
   public void create() {
+    Logger.log(String.format("Operációs rendszer: %s", System.getProperty("os.name")));
+
     batch = new SpriteBatch();
     loadAssets();
     setScreen(new GameScreen(this));
+
     Logger.log("A játék sikeresen elindult.");
   }
 

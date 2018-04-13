@@ -29,6 +29,7 @@ import hu.wolfman.deimos.input.KeyboardInputListener;
 import hu.wolfman.deimos.physics.BodyBuilder;
 import hu.wolfman.deimos.physics.ContactListener;
 import hu.wolfman.deimos.physics.FixtureBuilder;
+import hu.wolfman.deimos.utils.Logger;
 import hu.wolfman.deimos.utils.MusicManager;
 import hu.wolfman.deimos.utils.ResourceManager;
 
@@ -151,6 +152,7 @@ public class GameScreen implements Screen {
             .build();
       }
     }
+    Logger.log(String.format("%s betöltve.", TEST_LEVEL));
   }
 
   /**
@@ -230,6 +232,7 @@ public class GameScreen implements Screen {
       game.setScreen(
           new EndScreen(game, ResourceManager.get().localeString("game", "youWin"))
       );
+      Logger.log("Nyertél!");
     } else {
       player.setHasReachedEndOfLevel(false);
     }
