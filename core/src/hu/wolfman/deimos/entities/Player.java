@@ -14,7 +14,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
 import hu.wolfman.deimos.physics.BodyBuilder;
 import hu.wolfman.deimos.physics.FixtureBuilder;
 import hu.wolfman.deimos.utils.Logger;
-import hu.wolfman.deimos.utils.ResourceManager;
+import hu.wolfman.deimos.utils.Resources;
 
 import static hu.wolfman.deimos.Constants.*;
 
@@ -56,9 +56,9 @@ public class Player extends Entity {
     bullets = new CopyOnWriteArrayList<>();
 
     playerStanding = this.baseTexture;
-    playerJumping = ResourceManager.get().textureRegion("player", "player_jumping");
+    playerJumping = Resources.get().textureRegion("player", "player_jumping");
     playerRunning = createAnimation(
-        ResourceManager.get().textureRegion("player", "player_running"), 8, 50
+        Resources.get().textureRegion("player", "player_running"), 8, 50
     );
 
     setRegion(playerStanding);
@@ -138,7 +138,7 @@ public class Player extends Entity {
    * A játékos sprite-ját állítja be az állapotától függően.
    *
    * @param delta Két frissítés között eltelt idő (általában 1/60 s).
-   * @return Textúrarégió
+   * @return Textúra
    */
   private TextureRegion getFrame(float delta) {
     currentState = getState();
@@ -176,7 +176,7 @@ public class Player extends Entity {
    */
   public void jump() {
     if (currentState != State.JUMPING && currentState != State.FALLING && !isDead) {
-      ResourceManager.get().sound("jump").play();
+      Resources.get().sound("jump").play();
       body.applyLinearImpulse(new Vector2(0, 5f), body.getWorldCenter(), true);
       currentState = State.JUMPING;
     }
@@ -188,10 +188,10 @@ public class Player extends Entity {
    */
   public void fire() {
     if (!isDead) {
-      ResourceManager.get().sound("shoot").play();
+      Resources.get().sound("shoot").play();
       bullets.add(new Bullet(
           world,
-          new TextureRegion(ResourceManager.get().texture("bullet")),
+          new TextureRegion(Resources.get().texture("bullet")),
           facingRight ? getX() * PPM + width - 5 : getX() * PPM + 5,
           getY() * PPM + 30,
           facingRight,

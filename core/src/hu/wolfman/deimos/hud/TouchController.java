@@ -11,7 +11,7 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 
 import hu.wolfman.deimos.entities.Player;
 import hu.wolfman.deimos.input.TouchInputListener;
-import hu.wolfman.deimos.utils.ResourceManager;
+import hu.wolfman.deimos.utils.Resources;
 
 import static hu.wolfman.deimos.Constants.BUTTON_SIZE;
 import static hu.wolfman.deimos.Constants.HEIGHT;
@@ -66,11 +66,11 @@ public class TouchController implements Disposable {
   /**
    * Gomb létrehozása.
    *
-   * @param textureRegion A megfelelő textúrarégió neve.
+   * @param textureRegion A megfelelő textúra neve.
    * @return A kontrolleren elhelyezendő kép.
    */
   private Image createButton(String textureRegion) {
-    Image image = new Image(ResourceManager.get().textureRegion("controller", textureRegion));
+    Image image = new Image(Resources.get().textureRegion("controller", textureRegion));
     image.setSize(BUTTON_SIZE, BUTTON_SIZE);
     image.addListener(new TouchInputListener(textureRegion, player));
     return image;

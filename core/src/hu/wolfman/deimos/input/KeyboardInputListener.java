@@ -7,7 +7,7 @@ import com.badlogic.gdx.InputAdapter;
 import hu.wolfman.deimos.entities.Player;
 import hu.wolfman.deimos.screens.GameScreen;
 import hu.wolfman.deimos.utils.Logger;
-import hu.wolfman.deimos.utils.MusicManager;
+import hu.wolfman.deimos.utils.MusicMgr;
 
 /**
  * A billentyűzet beviteli eseményeit kezelő osztály.
@@ -34,11 +34,11 @@ public class KeyboardInputListener extends InputAdapter {
     if (keycode == Keys.LEFT) player.setMovingLeft(true);
     if (keycode == Keys.RIGHT) player.setMovingRight(true);
     if (keycode == Keys.UP) player.jump();
-    if (keycode == Keys.CONTROL_LEFT) player.fire();
+    if (keycode == Keys.CONTROL_LEFT || keycode == Keys.CONTROL_RIGHT) player.fire();
 
-    if (keycode == Keys.M) MusicManager.get().toggleMusic();
-    if (keycode == Keys.PLUS) MusicManager.get().increaseVolume();
-    if (keycode == Keys.MINUS) MusicManager.get().decreaseVolume();
+    if (keycode == Keys.M) MusicMgr.get().toggleMusic();
+    if (keycode == Keys.PLUS) MusicMgr.get().increaseVolume();
+    if (keycode == Keys.MINUS) MusicMgr.get().decreaseVolume();
 
     if (keycode == Keys.D) screen.toggleDebugRenderer();
     if (keycode == Keys.ESCAPE) {

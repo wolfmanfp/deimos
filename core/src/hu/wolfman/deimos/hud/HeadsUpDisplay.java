@@ -14,7 +14,7 @@ import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 
 import hu.wolfman.deimos.entities.Player;
-import hu.wolfman.deimos.utils.ResourceManager;
+import hu.wolfman.deimos.utils.Resources;
 
 import static hu.wolfman.deimos.Constants.HEIGHT;
 import static hu.wolfman.deimos.Constants.WIDTH;
@@ -55,7 +55,7 @@ public class HeadsUpDisplay implements Disposable {
    */
   private Table createHud() {
     LabelStyle font = new LabelStyle(
-        ResourceManager.get().bitmapFont("hudFont"),
+        Resources.get().bitmapFont("hudFont"),
         Color.WHITE
     );
 

@@ -5,11 +5,11 @@ import com.badlogic.gdx.audio.Music;
 /**
  * A játék háttérzenéjét kezelő osztály.
  */
-public class MusicManager {
+public class MusicMgr {
   private Music music;
-  private static MusicManager INSTANCE;
+  private static MusicMgr INSTANCE;
 
-  private MusicManager() {}
+  private MusicMgr() {}
 
   /**
    * Az osztály statikus példányát visszaadó metódus.
@@ -17,9 +17,9 @@ public class MusicManager {
    *
    * @return Az osztály példánya.
    */
-  public static MusicManager get() {
+  public static MusicMgr get() {
     if (INSTANCE == null) {
-      INSTANCE = new MusicManager();
+      INSTANCE = new MusicMgr();
     }
     return INSTANCE;
   }
@@ -30,7 +30,7 @@ public class MusicManager {
    * @param name A zene azonosítója
    */
   public void play(String name) {
-    music = ResourceManager.get().music(name);
+    music = Resources.get().music(name);
     music.setLooping(true);
     music.play();
   }

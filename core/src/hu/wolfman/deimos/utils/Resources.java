@@ -18,13 +18,13 @@ import java.util.Map;
  *
  * @author Farkas Péter
  */
-public class ResourceManager implements Disposable {
+public class Resources implements Disposable {
   private Map<String, String> items;
   private AssetManager manager;
   private String game;
-  private static ResourceManager INSTANCE;
+  private static Resources INSTANCE;
 
-  private ResourceManager() {
+  private Resources() {
     manager = new AssetManager();
     items = new HashMap<>();
   }
@@ -35,9 +35,9 @@ public class ResourceManager implements Disposable {
    *
    * @return Az osztály példánya.
    */
-  public static ResourceManager get() {
+  public static Resources get() {
     if (INSTANCE == null) {
-      INSTANCE = new ResourceManager();
+      INSTANCE = new Resources();
     }
     return INSTANCE;
   }
@@ -83,7 +83,7 @@ public class ResourceManager implements Disposable {
 
   /**
    * Egy tárolt hangeffektus megkeresése.
-   * Használata: ResourceManager.get().sound("jump");
+   * Használata: Resources.get().sound("jump");
    *
    * @param id A hangeffektus azonosítója.
    * @return Hangeffektus
@@ -119,9 +119,9 @@ public class ResourceManager implements Disposable {
   }
 
   /**
-   * Textúraatlasz betöltése a játék megfelelő könyvtárából.
+   * TextureAtlas betöltése a játék megfelelő könyvtárából.
    *
-   * @param id       Azonosító, amivel hivatkozunk betöltésnél az atlaszra.
+   * @param id       Azonosító, amivel hivatkozunk betöltésnél az objektumra.
    * @param filename A gyűjteményfájl neve.
    */
   public void loadTextureAtlas(String id, String filename) {
@@ -135,11 +135,11 @@ public class ResourceManager implements Disposable {
   }
 
   /**
-   * Egy tárolt textúrarégió megkeresése.
+   * Egy tárolt textúra megkeresése.
    *
-   * @param id     A textúraatlasz azonosítója.
-   * @param region A keresett régió.
-   * @return Textúrarégió
+   * @param id     A TextureAtlas azonosítója.
+   * @param region A keresett textúra.
+   * @return Textúra
    */
   public TextureRegion textureRegion(String id, String region) {
     return manager.get(items.get(id), TextureAtlas.class).findRegion(region);

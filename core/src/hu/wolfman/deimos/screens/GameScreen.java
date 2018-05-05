@@ -30,8 +30,8 @@ import hu.wolfman.deimos.physics.BodyBuilder;
 import hu.wolfman.deimos.physics.ContactListener;
 import hu.wolfman.deimos.physics.FixtureBuilder;
 import hu.wolfman.deimos.utils.Logger;
-import hu.wolfman.deimos.utils.MusicManager;
-import hu.wolfman.deimos.utils.ResourceManager;
+import hu.wolfman.deimos.utils.MusicMgr;
+import hu.wolfman.deimos.utils.Resources;
 
 import static hu.wolfman.deimos.Constants.*;
 
@@ -103,7 +103,7 @@ public class GameScreen implements Screen {
     Gdx.input.setInputProcessor(multiplexer);
     Controllers.addListener(new ControllerInputListener(player));
 
-    MusicManager.get().play("GameMusic");
+    MusicMgr.get().play("GameMusic");
   }
 
   /**
@@ -126,8 +126,8 @@ public class GameScreen implements Screen {
           .build();
     }
 
-    TextureRegion playerTexture = ResourceManager.get().textureRegion("player", "player_standing");
-    TextureRegion enemyTexture = ResourceManager.get().textureRegion("enemy", "enemy_idle");
+    TextureRegion playerTexture = Resources.get().textureRegion("player", "player_standing");
+    TextureRegion enemyTexture = Resources.get().textureRegion("enemy", "enemy_idle");
 
     for (MapObject object :
         map.getLayers().get("objects").getObjects().getByType(RectangleMapObject.class)) {
@@ -209,11 +209,11 @@ public class GameScreen implements Screen {
    */
   private void checkState() {
     if (player.currentState == State.DEAD && player.getStateTimer() > 1) {
-      MusicManager.get().stop();
+      MusicMgr.get().stop();
       Controllers.clearListeners();
       dispose();
       game.setScreen(
-          new EndScreen(game, ResourceManager.get().localeString("game", "youDied"))
+          new EndScreen(game, Resources.get().localeString("game", "youDied"))
       );
     }
 
@@ -226,11 +226,11 @@ public class GameScreen implements Screen {
     }
 
     if (player.hasReachedEndOfLevel() && enemiesAreDead) {
-      MusicManager.get().stop();
+      MusicMgr.get().stop();
       Controllers.clearListeners();
       dispose();
       game.setScreen(
-          new EndScreen(game, ResourceManager.get().localeString("game", "youWin"))
+          new EndScreen(game, Resources.get().localeString("game", "youWin"))
       );
       Logger.log("Nyertél!");
     } else {

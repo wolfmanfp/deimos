@@ -16,7 +16,7 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 
 import hu.wolfman.deimos.Game;
 import hu.wolfman.deimos.utils.Logger;
-import hu.wolfman.deimos.utils.ResourceManager;
+import hu.wolfman.deimos.utils.Resources;
 
 import static hu.wolfman.deimos.Constants.HEIGHT;
 import static hu.wolfman.deimos.Constants.WIDTH;
@@ -35,7 +35,7 @@ public class EndScreen implements Screen {
   /**
    * Az osztály konstruktora.
    *
-   * @param game A játék fő osztályának objektuma.
+   * @param game    A játék fő osztályának objektuma.
    * @param message A megjelenítendő üzenet.
    */
   public EndScreen(Game game, String message) {
@@ -72,21 +72,23 @@ public class EndScreen implements Screen {
   /**
    * A képernyő létrehozása.
    *
-   * @return A képrenyőt leíró táblázat
+   * @return A képernyőt leíró táblázat
    */
   private Table createScreen() {
     LabelStyle font = new LabelStyle(
-        ResourceManager.get().bitmapFont("hudFont"),
+        Resources.get().bitmapFont("hudFont"),
         Color.WHITE
     );
 
     String playAgain = game.isRunningOnPhone()
-        ? ResourceManager.get().localeString("game", "touchScreen")
-        : ResourceManager.get().localeString("game", "pressSpace");
+        ? Resources.get().localeString("game", "touchScreen")
+        : Resources.get().localeString("game", "pressSpace");
     Label messageLabel = new Label(message, font);
     Label playAgainLabel = new Label(playAgain, font);
+    Label infoLabel = new Label(Resources.get().localeString("game", "info"), font);
     messageLabel.setFontScale(0.5f);
     playAgainLabel.setFontScale(0.3f);
+    infoLabel.setFontScale(0.2f);
 
     Table table = new Table();
     table.center();
@@ -94,6 +96,8 @@ public class EndScreen implements Screen {
     table.add(messageLabel).expandX();
     table.row();
     table.add(playAgainLabel).expandX().padTop(10f);
+    table.row();
+    table.add(infoLabel).expandX().padTop(30f);
     return table;
   }
 

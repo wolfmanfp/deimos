@@ -101,7 +101,7 @@ public abstract class Entity extends Sprite {
   /**
    * Animáció készítése entitás számára.
    *
-   * @param region      Textúraatlasz régiója.
+   * @param region      TextureAtlas objektum régiója.
    * @param numOfFrames A képkockák száma.
    * @param size        A sprite mérete.
    * @return Animáció

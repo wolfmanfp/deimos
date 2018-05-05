@@ -11,7 +11,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
 
 import hu.wolfman.deimos.physics.BodyBuilder;
 import hu.wolfman.deimos.physics.FixtureBuilder;
-import hu.wolfman.deimos.utils.ResourceManager;
+import hu.wolfman.deimos.utils.Resources;
 
 import static hu.wolfman.deimos.Constants.ATTACK_DELAY;
 import static hu.wolfman.deimos.Constants.BULLET_BIT;
@@ -55,7 +55,7 @@ public class Enemy extends Entity {
     bullets = new CopyOnWriteArrayList<>();
 
     enemyIdle = baseTexture;
-    enemyDead = ResourceManager.get().textureRegion("enemy", "enemy_dead");
+    enemyDead = Resources.get().textureRegion("enemy", "enemy_dead");
 
     setRegion(enemyIdle);
     body = createBody();
@@ -132,7 +132,7 @@ public class Enemy extends Entity {
    * Az ellenfél sprite-ját állítja be az állapotától függően.
    *
    * @param delta Két frissítés között eltelt idő (általában 1/60 s).
-   * @return Textúrarégió
+   * @return Textúra
    */
   private TextureRegion getFrame(float delta) {
     currentState = getState();
@@ -160,10 +160,10 @@ public class Enemy extends Entity {
    */
   public void fire() {
     if (!isDead) {
-      ResourceManager.get().sound("shoot").play();
+      Resources.get().sound("shoot").play();
       bullets.add(new Bullet(
           world,
-          new TextureRegion(ResourceManager.get().texture("bullet")),
+          new TextureRegion(Resources.get().texture("bullet")),
           getX() * PPM + 5,
           getY() * PPM + 30,
           false,

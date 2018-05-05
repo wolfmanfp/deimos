@@ -18,7 +18,7 @@ public class TouchInputListener extends InputListener {
   /**
    * Az osztály konstruktora.
    *
-   * @param buttonName A gomb azonosítója, ez alapján dől el, hogy milyen művelet fut le
+   * @param buttonName A gomb azonosítója
    * @param player     A játékos karakter
    */
   public TouchInputListener(String buttonName, Player player) {

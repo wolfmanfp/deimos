@@ -6,7 +6,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
 import hu.wolfman.deimos.screens.GameScreen;
 import hu.wolfman.deimos.utils.Logger;
-import hu.wolfman.deimos.utils.ResourceManager;
+import hu.wolfman.deimos.utils.Resources;
 
 import static com.badlogic.gdx.Application.ApplicationType.Android;
 import static com.badlogic.gdx.Application.ApplicationType.iOS;
@@ -40,17 +40,17 @@ public class Game extends com.badlogic.gdx.Game {
    * A játék által használt képek, hangok, betűtípusok betöltése.
    */
   private void loadAssets() {
-    ResourceManager.get().setGame(MAIN_GAME);
-    ResourceManager.get().loadSound("jump", "phaserUp1.mp3");
-    ResourceManager.get().loadSound("shoot", "FXhome.com Futuristic Gun Sound 01.mp3");
-    ResourceManager.get().loadMusic("GameMusic", "Low Level Action A.mp3");
-    ResourceManager.get().loadBitmapFont("hudFont", "PressStart2P.fnt");
-    ResourceManager.get().loadLanguageBundle("game");
-    ResourceManager.get().loadTextureAtlas("player", "player.atlas");
-    ResourceManager.get().loadTextureAtlas("controller", "controller.atlas");
-    ResourceManager.get().loadTextureAtlas("enemy", "enemy.atlas");
-    ResourceManager.get().loadTexture("bullet", "bullet.png");
-    ResourceManager.get().finishLoading();
+    Resources.get().setGame(MAIN_GAME);
+    Resources.get().loadSound("jump", "phaserUp1.mp3");
+    Resources.get().loadSound("shoot", "FXhome.com Futuristic Gun Sound 01.mp3");
+    Resources.get().loadMusic("GameMusic", "Low Level Action A.mp3");
+    Resources.get().loadBitmapFont("hudFont", "PressStart2P.fnt");
+    Resources.get().loadLanguageBundle("game");
+    Resources.get().loadTextureAtlas("player", "player.atlas");
+    Resources.get().loadTextureAtlas("controller", "controller.atlas");
+    Resources.get().loadTextureAtlas("enemy", "enemy.atlas");
+    Resources.get().loadTexture("bullet", "bullet.png");
+    Resources.get().finishLoading();
   }
 
   /**
@@ -62,7 +62,7 @@ public class Game extends com.badlogic.gdx.Game {
   public void render() {
     Gdx.gl20.glClear(GL20.GL_COLOR_BUFFER_BIT);
     screen.render(DELTA);
-    ResourceManager.get().update();
+    Resources.get().update();
   }
 
   /**
@@ -73,7 +73,7 @@ public class Game extends com.badlogic.gdx.Game {
     super.dispose();
     batch.dispose();
     screen.dispose();
-    ResourceManager.get().dispose();
+    Resources.get().dispose();
   }
 
   /**

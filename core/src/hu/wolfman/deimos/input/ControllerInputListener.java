@@ -34,10 +34,10 @@ public class ControllerInputListener extends ControllerAdapter {
    */
   @Override
   public boolean buttonDown(Controller controller, int buttonCode) {
-    if (buttonCode == Xbox.A) {
+    if (buttonCode == XboxGamepad.A) {
       player.fire();
     }
-    if (buttonCode == Xbox.B) {
+    if (buttonCode == XboxGamepad.B) {
       player.jump();
     }
     return false;
@@ -53,7 +53,7 @@ public class ControllerInputListener extends ControllerAdapter {
    */
   @Override
   public boolean axisMoved(Controller controller, int axisCode, float value) {
-    if (axisCode == Xbox.L_STICK_HORIZONTAL_AXIS) {
+    if (axisCode == XboxGamepad.L_STICK_HORIZONTAL_AXIS) {
       player.setMovingLeft(value < -0.01);
       player.setMovingRight(value > 0.01);
     }
