@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <map version="1.0" tiledversion="1.1.4" orientation="orthogonal" renderorder="right-down" width="50" height="8" tilewidth="35" tileheight="35" infinite="0" nextobjectid="37">
  <tileset firstgid="1" name="industrial" tilewidth="35" tileheight="35" tilecount="112" columns="14">
-  <image source="industrial.png" width="490" height="280"/>
+  <image source="..\textures\industrial.png" width="490" height="280"/>
  </tileset>
  <tileset firstgid="113" name="far-buildings" tilewidth="35" tileheight="35" tilecount="35" columns="7">
-  <image source="far-buildings.png" width="256" height="192"/>
+  <image source="..\textures\far-buildings.png" width="256" height="192"/>
  </tileset>
  <layer name="background" width="50" height="8">
   <data encoding="base64" compression="zlib">
