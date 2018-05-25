@@ -54,8 +54,8 @@ public class ControllerInputListener extends ControllerAdapter {
   @Override
   public boolean axisMoved(Controller controller, int axisCode, float value) {
     if (axisCode == XboxGamepad.L_STICK_HORIZONTAL_AXIS) {
-      player.setMovingLeft(value < -0.01);
-      player.setMovingRight(value > 0.01);
+      player.setMovingLeft(value < -0.1);
+      player.setMovingRight(value > 0.1);
     }
     return false;
   }
