@@ -61,16 +61,6 @@ public class FixtureBuilder {
   }
 
   /**
-   * Fixtúra beállítása szenzornak.
-   *
-   * @return FixtureBuilder objektum
-   */
-  public FixtureBuilder setAsSensor() {
-    fixtureDef.isSensor = true;
-    return this;
-  }
-
-  /**
    * Fixtúra létrehozása.
    *
    * @return Fixtúradefiníció
