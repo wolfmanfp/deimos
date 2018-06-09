@@ -37,6 +37,13 @@ public abstract class Entity extends Sprite {
     setBounds(0, 0, width, height);
   }
 
+  /**
+   * Az osztály konstruktora.
+   *
+   * @param world       Box2D világ
+   * @param baseTexture Kezdő textúra
+   * @param rect        Az entitás pozícióját leíró négyszög
+   */
   public Entity(World world, TextureRegion baseTexture, Rectangle rect) {
     this(world, baseTexture);
     this.rect = rect;

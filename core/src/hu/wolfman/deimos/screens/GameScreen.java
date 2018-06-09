@@ -17,6 +17,9 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.utils.viewport.FitViewport;
+import com.badlogic.gdx.utils.viewport.ScreenViewport;
+import com.badlogic.gdx.utils.viewport.Viewport;
 
 import hu.wolfman.deimos.Game;
 import hu.wolfman.deimos.entities.Enemy;
@@ -65,7 +68,7 @@ public class GameScreen implements Screen {
   private Player player;
   private Array<Enemy> enemies;
 
-  private boolean debug = false;
+  private boolean debugRendererIsOn = false;
 
   /**
    * Az osztály konstruktora.
@@ -176,7 +179,7 @@ public class GameScreen implements Screen {
     player.draw(game.batch);
     game.batch.end();
 
-    if (debug) {
+    if (debugRendererIsOn) {
       game.batch.setProjectionMatrix(debugCamera.combined);
       setCameraPosition(debugCamera);
       debugCamera.update();
@@ -188,7 +191,7 @@ public class GameScreen implements Screen {
       touchController.draw();
     }
 
-    checkState();
+    postUpdate();
   }
 
   /**
@@ -207,7 +210,7 @@ public class GameScreen implements Screen {
    * Ellenőrzi, hogy a játékos nyert-e vagy vesztett,
    * és megadja, hogy mi történjen ezekben az esetekben.
    */
-  private void checkState() {
+  private void postUpdate() {
     if (player.currentState == State.DEAD && player.getStateTimer() > 1) {
       MusicMgr.get().stop();
       Controllers.clearListeners();
@@ -239,11 +242,11 @@ public class GameScreen implements Screen {
   }
 
   /**
-   * A Box2D debug renderert kapcsolja ki/be.
+   * A Box2D debugRendererIsOn renderert kapcsolja ki/be.
    */
   public void toggleDebugRenderer() {
     if (game.isDebugModeOn()) {
-      debug = !debug;
+      debugRendererIsOn = !debugRendererIsOn;
     }
   }
 
