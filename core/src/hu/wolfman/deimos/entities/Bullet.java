@@ -27,14 +27,13 @@ public class Bullet extends Entity {
    * @param x             X koordináta
    * @param y             Y koordináta
    * @param isFlyingRight Meghatározza, hogy milyen irányba repül
-   * @param isEnemy       Meghatározza, hogy az ellenség vagy a játékos tölténye
    * @param owner         A tulajdonos objektum
    */
   public Bullet(World world, TextureRegion baseTexture,
-                float x, float y, boolean isFlyingRight, boolean isEnemy, Object owner) {
+                float x, float y, boolean isFlyingRight, Object owner) {
     super(world, baseTexture);
-    this.isEnemy = isEnemy;
     this.owner = owner;
+    this.isEnemy = owner instanceof Enemy;
 
     setPosition(x, y);
     setRegion(baseTexture);

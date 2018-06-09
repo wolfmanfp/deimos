@@ -167,7 +167,6 @@ public class Enemy extends Entity {
           getX() * PPM + 5,
           getY() * PPM + 30,
           false,
-          true,
           this
       ));
     }

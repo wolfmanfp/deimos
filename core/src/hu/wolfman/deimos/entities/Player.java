@@ -195,7 +195,6 @@ public class Player extends Entity {
           facingRight ? getX() * PPM + width - 5 : getX() * PPM + 5,
           getY() * PPM + 30,
           facingRight,
-          false,
           this
       ));
     }
