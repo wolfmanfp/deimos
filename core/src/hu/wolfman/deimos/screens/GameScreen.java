@@ -149,7 +149,7 @@ public class GameScreen implements Screen {
             .addFixture(
                 new FixtureBuilder()
                     .setBoxShape(rect.getWidth(), rect.getHeight())
-                    .setFilter(LEVEL_END_BIT, PLAYER_BIT | ENEMY_BIT | BULLET_BIT | ENEMY_BULLET_BIT)
+                    .setFilter(LEVEL_END_BIT, PLAYER_BIT)
                     .build()
             )
             .build();
