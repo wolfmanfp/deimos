@@ -17,9 +17,6 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.Array;
-import com.badlogic.gdx.utils.viewport.FitViewport;
-import com.badlogic.gdx.utils.viewport.ScreenViewport;
-import com.badlogic.gdx.utils.viewport.Viewport;
 
 import hu.wolfman.deimos.Game;
 import hu.wolfman.deimos.entities.Enemy;
@@ -191,7 +188,7 @@ public class GameScreen implements Screen {
       touchController.draw();
     }
 
-    postUpdate();
+    checkEntityState();
   }
 
   /**
@@ -210,7 +207,7 @@ public class GameScreen implements Screen {
    * Ellenőrzi, hogy a játékos nyert-e vagy vesztett,
    * és megadja, hogy mi történjen ezekben az esetekben.
    */
-  private void postUpdate() {
+  private void checkEntityState() {
     if (player.currentState == State.DEAD && player.getStateTimer() > 1) {
       MusicMgr.get().stop();
       Controllers.clearListeners();
