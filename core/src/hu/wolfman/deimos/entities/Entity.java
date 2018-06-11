@@ -106,22 +106,6 @@ public abstract class Entity extends Sprite {
   }
 
   /**
-   * Animáció készítése entitás számára.
-   *
-   * @param region      TextureAtlas objektum régiója.
-   * @param numOfFrames A képkockák száma.
-   * @param size        A sprite mérete.
-   * @return Animáció
-   */
-  protected Animation createAnimation(TextureRegion region, int numOfFrames, int size) {
-    Array<TextureRegion> frames = new Array<>();
-    for (int i = 0; i < numOfFrames; i++) {
-      frames.add(new TextureRegion(region, i * size, 0, size, size));
-    }
-    return new Animation<>(0.1f, frames);
-  }
-
-  /**
    * Entitás állapotának frissítése.
    *
    * @param delta Két frissítés között eltelt idő (általában 1/60 s).
