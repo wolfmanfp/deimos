@@ -6,6 +6,7 @@ import com.badlogic.gdx.physics.box2d.World;
 
 import hu.wolfman.deimos.physics.BodyBuilder;
 import hu.wolfman.deimos.physics.FixtureBuilder;
+import hu.wolfman.deimos.utils.Resources;
 
 import static hu.wolfman.deimos.Constants.*;
 
@@ -23,15 +24,13 @@ public class Bullet extends Entity {
    * A töltény konstruktora.
    *
    * @param world         Box2D világ
-   * @param baseTexture   A töltény textúrája
    * @param x             X koordináta
    * @param y             Y koordináta
    * @param isFlyingRight Meghatározza, hogy milyen irányba repül
    * @param owner         A tulajdonos objektum
    */
-  public Bullet(World world, TextureRegion baseTexture,
-                float x, float y, boolean isFlyingRight, Object owner) {
-    super(world, baseTexture);
+  public Bullet(World world, float x, float y, boolean isFlyingRight, Object owner) {
+    super(world, new TextureRegion(Resources.get().texture("bullet")));
     this.owner = owner;
     this.isEnemy = owner instanceof Enemy;
 

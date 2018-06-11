@@ -163,7 +163,6 @@ public class Enemy extends Entity {
       Resources.get().sound("shoot").play();
       bullets.add(new Bullet(
           world,
-          new TextureRegion(Resources.get().texture("bullet")),
           getX() * PPM + 5,
           getY() * PPM + 30,
           false,

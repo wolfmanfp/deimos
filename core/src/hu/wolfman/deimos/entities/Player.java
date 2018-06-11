@@ -208,7 +208,6 @@ public class Player extends Entity {
       Resources.get().sound("shoot").play();
       bullets.add(new Bullet(
           world,
-          new TextureRegion(Resources.get().texture("bullet")),
           facingRight ? getX() * PPM + width - 5 : getX() * PPM + 5,
           getY() * PPM + 30,
           facingRight,
